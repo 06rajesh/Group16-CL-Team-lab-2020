@@ -1,30 +1,25 @@
 
 class Evaluation:
-    def __init__(self, tagset, original, predicted):
-        self.tagset = tagset
+    def __init__(self, classes, original, predicted):
+        self.classes = classes
         self.original = original
         self.predicted = predicted
-        self.classes = {}
-        self.macro = {}
-        self.micro = {}
+        self.scores = {}
 
     def calculate(self):
-        for tag in self.tagset:
+        for tag in self.classes:
             if len(tag) > 0:
-                self.classes[tag] = self.calculate_class_score(tag)
-
-        self.macro = self.calculate_macro()
-        self.micro = self.calculate_micro()
+                self.scores[tag] = self.calculate_class_score(tag)
 
     # A macro-average will compute the metric independently for each class and then take the average (hence treating all
     # classes equally)
-    def calculate_macro(self):
+    def get_macro_score(self):
         total_pr = 0
         total_rc = 0
         count = 0
 
-        for c in self.classes:
-            score = self.classes[c]
+        for c in self.scores:
+            score = self.scores[c]
             total_pr += score['precision']
             total_rc += score['recall']
             count += 1
@@ -41,13 +36,13 @@ class Evaluation:
         }
 
     # micro-average will aggregate the contributions of all classes to compute the average metric.
-    def calculate_micro(self):
+    def get_micro_score(self):
         tp = 0
         fn = 0
         fp = 0
 
-        for c in self.classes:
-            score = self.classes[c]
+        for c in self.scores:
+            score = self.scores[c]
             tp += score['tp']
             fn += score['fn']
             fp += score['fp']
@@ -69,7 +64,7 @@ class Evaluation:
         fp = 0
         fn = 0
 
-        for i in self.original:
+        for i in range(len(self.predicted)):
             if self.original[i] == tag:
                 if self.predicted[i] == tag:
                     tp += 1

@@ -10,7 +10,11 @@ class PosToken:
         self._token = token
 
     def _search_pattern(self, pattern):
-        # searching pattern
+        """
+        search pattern among the token
+        :param pattern: string
+        :return: 1 if true else 0
+        """
         if re.search(pattern, self._token):
             return 1.
         else:

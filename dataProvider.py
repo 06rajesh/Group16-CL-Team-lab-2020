@@ -76,3 +76,23 @@ class DataProvider:
         print("==============================")
 
         return sentences, sentences_pos, classes
+
+    def load_test_data(self):
+        x = list()
+        y = list()
+
+        with open(self.path + '/train.col') as csv_file:
+            count = 0
+            csv_reader = csv.reader(csv_file, delimiter='\t')
+            for line in csv_reader:
+                if len(line) > 0:
+                    x.append(line[0])
+                    y.append(line[1])
+                    count += 1
+
+            print("Total {} Test Data loaded".format(count))
+            print("==============================")
+
+            classes = set(y)
+            return x, y, classes
+
