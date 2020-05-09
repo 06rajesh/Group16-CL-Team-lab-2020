@@ -2,6 +2,7 @@ from dataProvider import DataProvider
 from evaluation import Evaluation
 from posToken import PosToken
 from multiClassPerceptron import MultiClassItem, MultiClassPerceptron
+from perceptron import Perceptron
 
 
 def prepare_multi_class_item(sentences, sentence_pos, classes):
@@ -23,6 +24,7 @@ def prepare_multi_class_item(sentences, sentence_pos, classes):
 
             for k, v in inputs.items():
                 item = inputs.get(k)
+
                 if sentence_pos[i][j] == k:
                     item.X.append(features)
                     item.Y.append(1.)
@@ -35,15 +37,23 @@ def prepare_multi_class_item(sentences, sentence_pos, classes):
 
 if __name__ == '__main__':
     dt = DataProvider(path='data')
-    x_test, y_test, classes = dt.load_test_data()
+    x_test, y_test, _ = dt.load_test_data()
 
-    # sentences, sentence_pos, classes = dt.load_train_data()
-    # items = prepare_multi_class_item(sentences, sentence_pos, classes)
+    sentences, sentence_pos, classes = dt.load_train_data()
+
+    # for i in range(len(sentences[0])):
+    #     print("{} : {}".format(sentences[0][i], sentence_pos[0][i]))
+    #     token = PosToken(sentences[0][i])
+    #     features = token.get_features()
+    #     print(features)
+    #     print(pcp.convert_to_feature_vector(features))
+
+    items = prepare_multi_class_item(sentences, sentence_pos, classes)
     mlp = MultiClassPerceptron()
-    # mlp.train(items)
+    mlp.train(items)
     y_pred = mlp.predict(x=x_test)
 
-    ev = Evaluation(original=y_test, predicted=y_pred, classes=classes)
+    ev = Evaluation(original=y_test, predicted=y_test, classes=classes)
     ev.calculate()
 
     print("Macro Score: ")
@@ -59,6 +69,6 @@ if __name__ == '__main__':
     ================
     Macro Score: 
     {'precision': 0.10618033858730584, 'recall': 0.09774621372178947, 'fscore': 0.10178886418748978}
-    Micor Score: 
+    Micro Score: 
     {'precision': 0.22776990393301963, 'recall': 0.22776990393301963, 'fscore': 0.22776990393301963}
     """

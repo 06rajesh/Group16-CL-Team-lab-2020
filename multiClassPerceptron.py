@@ -45,13 +45,18 @@ class MultiClassPerceptron:
         :param inputs: Dictionary consists of MulticlassItem Class
         :return: null
         """
+
+        count = 0
+        total = len(inputs)
+
         for key, val in inputs.items():
             item = inputs.get(key)
             print("Training Perceptron for {}".format(key))
             prcptn = Perceptron()
-            print("Training Perceptron for {} complete".format(key))
+            print("Training Perceptron for {} complete. {}/{}".format(key, count, total))
             print("===================================")
             self._weights[key] = prcptn.train(item.X, item.Y)
+            count += 1
 
         print("Training Completed.")
         print("===================================")
@@ -70,10 +75,12 @@ class MultiClassPerceptron:
             weights = self.load_weights()
             token = PosToken(term)
             features = token.get_features()
+            pcp = Perceptron()
+            feature_vec = pcp.convert_to_feature_vector(features)
             scores = dict()
             for key, val in weights.items():
                 w = weights.get(key)
-                scores[key] = np.dot(features, w)
+                scores[key] = np.dot(feature_vec, w)
 
             selected = max(scores.items(), key=operator.itemgetter(1))[0]
             y_out.append(selected)
