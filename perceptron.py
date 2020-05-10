@@ -3,7 +3,7 @@ from posToken import PosToken
 
 
 class Perceptron:
-    def __init__(self, activation=0.0, learning_rate=0.1, epochs=50):
+    def __init__(self, activation=0.0, learning_rate=0.1, epochs=10):
         self._activation = activation
         self._learning_rate = learning_rate
         self._epochs = epochs

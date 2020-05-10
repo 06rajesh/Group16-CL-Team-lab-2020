@@ -2,6 +2,7 @@ from typing import Dict
 import numpy as np
 import operator
 import pickle
+import os.path
 
 from perceptron import Perceptron
 from posToken import PosToken
@@ -33,11 +34,13 @@ class MultiClassPerceptron:
     def load_weights(self, filename="weights.pickle"):
         if len(self._weights) > 0:
             return self._weights
-        else:
+        elif os.path.isfile(filename):
             infile = open(filename, 'rb')
             weights = pickle.load(infile)
             infile.close()
             return weights
+        else:
+            return None
 
     def train(self, inputs: Dict[str, MultiClassItem]):
         """
@@ -48,15 +51,25 @@ class MultiClassPerceptron:
 
         count = 0
         total = len(inputs)
+        finished = list()
+        weights = self.load_weights()
+
+        if weights is not None:
+            for pos in weights:
+                self._weights[pos] = weights[pos]
+                finished.append(pos)
+                count += 1
 
         for key, val in inputs.items():
-            item = inputs.get(key)
-            print("Training Perceptron for {}".format(key))
-            prcptn = Perceptron()
-            print("Training Perceptron for {} complete. {}/{}".format(key, count, total))
-            print("===================================")
-            self._weights[key] = prcptn.train(item.X, item.Y)
-            count += 1
+            if key not in finished:
+                item = inputs.get(key)
+                print("Training Perceptron for {}".format(key))
+                prcptn = Perceptron()
+                self._weights[key] = prcptn.train(item.X, item.Y)
+                count += 1
+                print("Training Perceptron for {} complete. {}/{}".format(key, count, total))
+                print("===================================")
+                self.save_to_file()
 
         print("Training Completed.")
         print("===================================")
@@ -70,18 +83,22 @@ class MultiClassPerceptron:
         :return: list of predictied tag
         """
         y_out = list()
+        weights = self.load_weights()
 
-        for term in x:
-            weights = self.load_weights()
-            token = PosToken(term)
-            features = token.get_features()
-            pcp = Perceptron()
-            feature_vec = pcp.convert_to_feature_vector(features)
-            scores = dict()
-            for key, val in weights.items():
-                w = weights.get(key)
-                scores[key] = np.dot(feature_vec, w)
+        if weights is not None:
+            for term in x:
+                token = PosToken(term)
+                features = token.get_features()
+                pcp = Perceptron()
+                feature_vec = pcp.convert_to_feature_vector(features)
+                scores = dict()
+                for key, val in weights.items():
+                    w = weights.get(key)
+                    scores[key] = np.dot(feature_vec, w)
 
-            selected = max(scores.items(), key=operator.itemgetter(1))[0]
-            y_out.append(selected)
-        return y_out
+                selected = max(scores.items(), key=operator.itemgetter(1))[0]
+                y_out.append(selected)
+            return y_out
+        else:
+            print("No Weights Found to predict")
+            return None
