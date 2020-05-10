@@ -50,10 +50,10 @@ if __name__ == '__main__':
 
     items = prepare_multi_class_item(sentences, sentence_pos, classes)
     mlp = MultiClassPerceptron()
-    mlp.train(items)
+    # mlp.train(items)
     y_pred = mlp.predict(x=x_test)
 
-    ev = Evaluation(original=y_test, predicted=y_test, classes=classes)
+    ev = Evaluation(original=y_test, predicted=y_pred, classes=classes)
     ev.calculate()
 
     print("Macro Score: ")
@@ -68,8 +68,7 @@ if __name__ == '__main__':
     OUTPUT
     ================
     Macro Score: 
-    {'precision': 0.10618033858730584, 'recall': 0.09774621372178947, 'fscore': 0.10178886418748978}
+    {'precision': 0.4688312691886069, 'recall': 0.41199408085521244, 'fscore': 0.438578902879972}
     Micro Score: 
-    {'precision': 0.22776990393301963, 'recall': 0.22776990393301963, 'fscore': 0.22776990393301963}
-    PID: 3797719
+    {'precision': 0.5829115853033511, 'recall': 0.5829115853033511, 'fscore': 0.5829115853033511}
     """
