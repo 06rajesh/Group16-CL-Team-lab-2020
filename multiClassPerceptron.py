@@ -63,8 +63,10 @@ class MultiClassPerceptron:
                 self._weights[pos] = weights[pos]
                 finished.append(pos)
                 count += 1
-        f_list = ", ".join(finished)
-        print("Already Finished : {}".format(f_list))
+
+        if len(finished) > 0:
+            f_list = ", ".join(finished)
+            print("Already Finished : {}".format(f_list))
 
         for key, val in inputs.items():
             if key not in finished:
