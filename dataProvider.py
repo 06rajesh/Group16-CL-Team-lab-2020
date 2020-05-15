@@ -42,7 +42,8 @@ class DataProvider:
         classes = set(data)
         return data, classes
 
-    def load_train_data(self):
+    @staticmethod
+    def construct_sentences(lines):
         sentences = []
         sentences_pos = []
 
@@ -50,49 +51,41 @@ class DataProvider:
         sent_pos_tmp = []
         all_pos = []
 
+        for line in lines:
+            if len(line) > 0:
+                pos = line[1]
+                sent_tmp.append(line[0])
+                sent_pos_tmp.append(pos)
+                all_pos.append(pos)
+            else:
+                sentences.append(sent_tmp)
+                sentences_pos.append(sent_pos_tmp)
+                sent_tmp = []
+                sent_pos_tmp = []
+        classes = set(all_pos)
+
+        return sentences, sentences_pos, classes
+
+    def load_train_data(self):
+
         with open(self.path + '/train.col') as csv_file:
-            count = 0
             csv_reader = csv.reader(csv_file, delimiter='\t')
-            for line in csv_reader:
-                if len(line) > 0:
-                    pos = line[1]
-                    sent_tmp.append(line[0])
-                    sent_pos_tmp.append(pos)
-                    all_pos.append(pos)
-                else:
-                    sentences.append(sent_tmp)
-                    sentences_pos.append(sent_pos_tmp)
-                    sent_tmp = []
-                    sent_pos_tmp = []
-
-                count += 1
-
-            classes = set(all_pos)
+            sentences, sentences_pos, classes = self.construct_sentences(csv_reader)
 
         print("Train Data Loaded")
         print("Total Classes: {}".format(len(classes)))
         print("Total Sentences: {}".format(len(sentences)))
-        print("Total Tagged Data: {}".format(count))
         print("==============================")
 
         return sentences, sentences_pos, classes
 
     def load_test_data(self):
-        x = list()
-        y = list()
-
-        with open(self.path + '/train.col') as csv_file:
-            count = 0
+        with open(self.path + '/test.col') as csv_file:
             csv_reader = csv.reader(csv_file, delimiter='\t')
-            for line in csv_reader:
-                if len(line) > 0:
-                    x.append(line[0])
-                    y.append(line[1])
-                    count += 1
+            sentences, sentences_pos, classes = self.construct_sentences(csv_reader)
 
-            print("Total {} Test Data loaded".format(count))
-            print("==============================")
-
-            classes = set(y)
-            return x, y, classes
-
+        print("Test Data Loaded")
+        print("Total Classes: {}".format(len(classes)))
+        print("Total Sentences: {}".format(len(sentences)))
+        print("==============================")
+        return sentences, sentences_pos, classes

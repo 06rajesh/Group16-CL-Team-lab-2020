@@ -3,6 +3,7 @@ from evaluation import Evaluation
 from posToken import PosToken
 from multiClassPerceptron import MultiClassItem, MultiClassPerceptron
 from perceptron import Perceptron
+from dictVectorizer import CustomDictVectorizer
 
 
 def prepare_multi_class_item(sentences, sentence_pos, classes):
@@ -16,42 +17,57 @@ def prepare_multi_class_item(sentences, sentence_pos, classes):
     inputs = dict()
     for pos in classes:
         inputs[pos] = MultiClassItem(pos)
-
-    for i in range(0, len(sentences)):
-        for j in range(0, len(sentences[i])):
-            token = PosToken(sentences[i][j])
-            features = token.get_features()
-
+    X = list()
+    t = PosToken()
+    for i in range(len(sentences)):
+        for j in range(len(sentences[i])):
+            features = t.get_features(sentences[i], j)
+            X.append(features)
             for k, v in inputs.items():
                 item = inputs.get(k)
-
                 if sentence_pos[i][j] == k:
-                    item.X.append(features)
                     item.Y.append(1.)
                 else:
-                    item.X.append(features)
                     item.Y.append(0.)
+
+    dv = CustomDictVectorizer()
+    dv.fit(X)
+    x_transformed = dv.transform(X)
+    for k, v in inputs.items():
+        item = inputs.get(k)
+        item.X = x_transformed
 
     return inputs
 
 
+def prepare_training_data(s, s_p):
+    inputs = dict()
+    x = list()
+    y = list()
+    t = PosToken()
+    for i in range(len(sentences)):
+        for j in range(len(sentences[i])):
+            features = t.get_features(sentences[i], j)
+            x.append(features)
+            y.append(s_p[i][j])
+
+    dv = CustomDictVectorizer()
+    x_transformed = dv.transform(x)
+    return x_transformed, y
+
+
 if __name__ == '__main__':
     dt = DataProvider(path='data')
-    x_test, y_test, _ = dt.load_test_data()
 
     sentences, sentence_pos, classes = dt.load_train_data()
+    sentences_test, sentence_pos_test, _ = dt.load_test_data()
 
-    # for i in range(len(sentences[0])):
-    #     print("{} : {}".format(sentences[0][i], sentence_pos[0][i]))
-    #     token = PosToken(sentences[0][i])
-    #     features = token.get_features()
-    #     print(features)
-    #     print(pcp.convert_to_feature_vector(features))
+    items = prepare_multi_class_item(sentences_test, sentence_pos_test, classes)
+    x_test, y_test = prepare_training_data(sentences_test, sentence_pos_test)
 
-    items = prepare_multi_class_item(sentences, sentence_pos, classes)
     mlp = MultiClassPerceptron()
-    # mlp.train(items)
-    y_pred = mlp.predict(x=x_test)
+    mlp.train(items)
+    y_pred = mlp.predict(inputs=x_test)
 
     ev = Evaluation(original=y_test, predicted=y_pred, classes=classes)
     ev.calculate()

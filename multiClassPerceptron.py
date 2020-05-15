@@ -21,17 +21,21 @@ class MultiClassItem:
 
 
 class MultiClassPerceptron:
-    def __init__(self):
+    def __init__(self, save_to="weights"):
         self._weights = dict()
+        self._savePath = save_to
 
-    def save_to_file(self, filename="weights.pickle"):
+    def save_to_file(self):
+        filename = os.path.join(self._savePath, "weights.pickle")
         print("Saving model to file {}".format(filename))
         print("===================================")
         outfile = open(filename, 'wb')
         pickle.dump(self._weights, outfile)
         outfile.close()
 
-    def load_weights(self, filename="weights.pickle"):
+    def load_weights(self):
+        filename = os.path.join(self._savePath, "weights.pickle")
+
         if len(self._weights) > 0:
             return self._weights
         elif os.path.isfile(filename):
@@ -76,25 +80,21 @@ class MultiClassPerceptron:
         self.save_to_file()
         return
 
-    def predict(self, x: list):
+    def predict(self, inputs):
         """
         Predict POS tag based of previously trained weights
-        :param x: List of string, tokens
+        :param inputs: array of inputs, numpy array
         :return: list of predictied tag
         """
         y_out = list()
         weights = self.load_weights()
 
         if weights is not None:
-            for term in x:
-                token = PosToken(term)
-                features = token.get_features()
-                pcp = Perceptron()
-                feature_vec = pcp.convert_to_feature_vector(features)
+            for x in inputs:
                 scores = dict()
                 for key, val in weights.items():
                     w = weights.get(key)
-                    scores[key] = np.dot(feature_vec, w)
+                    scores[key] = np.dot(x, w)
 
                 selected = max(scores.items(), key=operator.itemgetter(1))[0]
                 y_out.append(selected)
