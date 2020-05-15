@@ -41,13 +41,12 @@ def prepare_multi_class_item(sentences, sentence_pos, classes):
 
 
 def prepare_training_data(s, s_p):
-    inputs = dict()
     x = list()
     y = list()
     t = PosToken()
-    for i in range(len(sentences)):
-        for j in range(len(sentences[i])):
-            features = t.get_features(sentences[i], j)
+    for i in range(len(s)):
+        for j in range(len(s[i])):
+            features = t.get_features(s[i], j)
             x.append(features)
             y.append(s_p[i][j])
 
@@ -62,7 +61,7 @@ if __name__ == '__main__':
     sentences, sentence_pos, classes = dt.load_train_data()
     sentences_test, sentence_pos_test, _ = dt.load_test_data()
 
-    items = prepare_multi_class_item(sentences_test, sentence_pos_test, classes)
+    items = prepare_multi_class_item(sentences, sentence_pos, classes)
     x_test, y_test = prepare_training_data(sentences_test, sentence_pos_test)
 
     mlp = MultiClassPerceptron()

@@ -4,7 +4,7 @@ import pickle
 
 
 class CustomDictVectorizer:
-    def __init__(self, save_to="weights", min_feature_count=80):
+    def __init__(self, save_to="weights", min_feature_count=200):
         self.feature_list = list()
         self._min_feature_count = min_feature_count
         self._savePath = save_to
@@ -53,6 +53,7 @@ class CustomDictVectorizer:
                 break
 
         self.feature_list = all_features
+        print("Feature Vector length {}".format(len(all_features)))
         self.save_to_file()
 
     def transform(self, inputs: list):
