@@ -4,7 +4,7 @@ import pickle
 
 
 class CustomDictVectorizer:
-    def __init__(self, save_to="weights", min_feature_count=200):
+    def __init__(self, save_to="weights", min_feature_count=600):
         self.feature_list = list()
         self._min_feature_count = min_feature_count
         self._savePath = save_to
@@ -58,7 +58,7 @@ class CustomDictVectorizer:
 
     def transform(self, inputs: list):
         feature_list = self.load_features()
-
+        print("Fitting inputs with {} features".format(len(feature_list)))
         if feature_list is not None:
             n_inputs = len(inputs)
             n_features = len(feature_list)

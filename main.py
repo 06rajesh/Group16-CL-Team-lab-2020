@@ -2,7 +2,6 @@ from dataProvider import DataProvider
 from evaluation import Evaluation
 from posToken import PosToken
 from multiClassPerceptron import MultiClassItem, MultiClassPerceptron
-from perceptron import Perceptron
 from dictVectorizer import CustomDictVectorizer
 
 
@@ -31,7 +30,7 @@ def prepare_multi_class_item(sentences, sentence_pos, classes):
                     item.Y.append(0.)
 
     dv = CustomDictVectorizer()
-    dv.fit(X)
+    # dv.fit(X)
     x_transformed = dv.transform(X)
     for k, v in inputs.items():
         item = inputs.get(k)
@@ -86,4 +85,5 @@ if __name__ == '__main__':
     {'precision': 0.4688312691886069, 'recall': 0.41199408085521244, 'fscore': 0.438578902879972}
     Micro Score: 
     {'precision': 0.5829115853033511, 'recall': 0.5829115853033511, 'fscore': 0.5829115853033511}
+    PID: 309337
     """
