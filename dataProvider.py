@@ -72,12 +72,13 @@ class DataProvider:
             csv_reader = csv.reader(csv_file, delimiter='\t')
             sentences, sentences_pos, classes = self.construct_sentences(csv_reader)
 
+        half = int(len(sentences)/2)
         print("Train Data Loaded")
         print("Total Classes: {}".format(len(classes)))
-        print("Total Sentences: {}".format(len(sentences)))
+        print("Total Sentences: {}".format(half))
         print("==============================")
 
-        return sentences, sentences_pos, classes
+        return sentences[:half], sentences_pos[:half], classes
 
     def load_test_data(self):
         with open(self.path + '/test.col') as csv_file:
