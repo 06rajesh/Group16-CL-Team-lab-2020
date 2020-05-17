@@ -3,7 +3,8 @@ import time
 
 
 class Perceptron:
-    def __init__(self, activation=0.0, learning_rate=0.1, epochs=10):
+    def __init__(self, name=None, activation=0.0, learning_rate=0.1, epochs=10):
+        self._name = name
         self._activation = activation
         self._learning_rate = learning_rate
         self._epochs = epochs
@@ -18,14 +19,16 @@ class Perceptron:
     def train(self, x, y):
         w = np.zeros(len(x[0]))
         y_hat = np.ones(len(y))
-        error = np.ones(len(y))
-        errors = list()
+        # error = np.ones(len(y))
+        # errors = list()
 
         for e in range(0, self._epochs):
+            start = time.time()
+
             for n in range(0, len(x)):
                 # dot product of weights and x(input)
                 # triggers activation function if > 0
-                start = time.time()
+
                 v = x[n]
                 f = np.dot(v, w)
                 y_pred = self.activation_function(f)
@@ -35,8 +38,11 @@ class Perceptron:
                 for w_i in range(0, len(w)):
                     w[w_i] = w[w_i] + self._learning_rate * (y[n] - y_pred) * v[w_i]
 
-                completed = time.time() - start
+            completed = time.time() - start
+            if self._name is None:
                 print("Epochs {} completed in {}".format(e, completed))
+            else:
+                print("{} : Epochs {} completed in {}".format(self._name, e, completed))
 
         self._weights = w
         return w

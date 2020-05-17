@@ -4,7 +4,7 @@ import pickle
 
 
 class CustomDictVectorizer:
-    def __init__(self, save_to="weights", min_feature_count=600):
+    def __init__(self, save_to="weights", min_feature_count=400):
         self.feature_list = list()
         self._min_feature_count = min_feature_count
         self._savePath = save_to

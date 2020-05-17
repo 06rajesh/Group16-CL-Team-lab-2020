@@ -4,6 +4,8 @@ from posToken import PosToken
 from multiClassPerceptron import MultiClassItem, MultiClassPerceptron
 from dictVectorizer import CustomDictVectorizer
 
+savePath = "weights"
+
 
 def prepare_multi_class_item(sentences, sentence_pos, classes):
     """
@@ -29,7 +31,7 @@ def prepare_multi_class_item(sentences, sentence_pos, classes):
                 else:
                     item.Y.append(0.)
 
-    dv = CustomDictVectorizer()
+    dv = CustomDictVectorizer(save_to=savePath)
     # dv.fit(X)
     x_transformed = dv.transform(X)
     for k, v in inputs.items():
@@ -49,7 +51,7 @@ def prepare_training_data(s, s_p):
             x.append(features)
             y.append(s_p[i][j])
 
-    dv = CustomDictVectorizer()
+    dv = CustomDictVectorizer(save_to=savePath)
     x_transformed = dv.transform(x)
     return x_transformed, y
 
@@ -63,7 +65,7 @@ if __name__ == '__main__':
     items = prepare_multi_class_item(sentences, sentence_pos, classes)
     x_test, y_test = prepare_training_data(sentences_test, sentence_pos_test)
 
-    mlp = MultiClassPerceptron()
+    mlp = MultiClassPerceptron(save_to=savePath)
     mlp.train(items)
     y_pred = mlp.predict(inputs=x_test)
 

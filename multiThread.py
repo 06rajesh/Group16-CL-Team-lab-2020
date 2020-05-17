@@ -1,41 +1,58 @@
-from threading import Thread
+import multiprocessing
 import time
-from multiClassPerceptron import MultiClassItem
-from dictVectorizer import CustomDictVectorizer
 
 
-class PerceptronThread(Thread):
-    def __init__(self, threadID, name, item: MultiClassItem):
-        Thread.__init__(self)
-        self.exitFlag = 0
-        self.threadID = threadID
-        self.name = name
-        self.item = item
-        self._return = None
+def spawn(num, return_dict):
+    name = multiprocessing.current_process().name
+    print("{} is starting".format(name))
+    time.sleep(2)
+    return_dict[name] = num*num
+    print("{} is exiting".format(name))
+
+
+def split(a, n):
+    k, m = divmod(len(a), n)
+    gen = (a[i * k + min(i, m):(i + 1) * k + min(i + 1, m)] for i in range(n))
+    full = list()
+    for i in range(len(a)):
+        temp = list()
+        for j in range(n):
+            temp.append(i)
+
+    return list(gen)
+
+
+def chunkify(items, chunk_len):
+    return [items[i:i+chunk_len] for i in range(0,len(items),chunk_len)]
+
+
+class MultiProcessTest:
+    def __init__(self):
+        self.count = 0
 
     def run(self):
-        print("Starting {}".format(self.name))
-        dv = CustomDictVectorizer()
-        feature_vec = dv.transform(self.item.X)
-        print("{}: {}".format(self.name, feature_vec.shape))
-        print("Exiting {}".format(self.name))
-        self._return = feature_vec
+        manager = multiprocessing.Manager()
+        return_dict = manager.dict()
+        jobs = list()
 
-    def join(self, *args):
-        Thread.join(self)
-        return self._return
+        pos = ['NFP', 'WRB', 'VB', 'VBG', '-RRB-', 'VBN', 'VBD', ':', 'UH', 'NN', 'JJR', 'WDT', 'DT', 'IN', 'WP$', 'NNPS', 'MD', 'RBR', 'HYPH', 'CC', '``', "''", ',']
+        splitted = chunkify(pos, 3)
+
+        print(splitted)
+
+        for batch in splitted:
+            for i in batch:
+                p = multiprocessing.Process(name="Process_" + str(i), target=spawn, args=(i, return_dict))
+                jobs.append(p)
+                p.start()
+
+            for proc in jobs:
+                proc.join()
+
+        print(return_dict)
 
 
-class ItemsFeatures:
-    def __init__(self, items: dict):
-        self.items = items
+if __name__ == '__main__':
+    mu = MultiProcessTest()
+    mu.run()
 
-    def fit(self):
-        items = dict()
-
-        for idx, key in enumerate(self.items):
-            thread = PerceptronThread(idx, key, self.items[key])
-            thread.start()
-            items[key] = thread.join()
-
-        print(len(items['NNS']))
