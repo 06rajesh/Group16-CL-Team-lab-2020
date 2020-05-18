@@ -32,11 +32,10 @@ def prepare_multi_class_item(sentences, sentence_pos, classes):
                     item.Y.append(0.)
 
     dv = CustomDictVectorizer(save_to=savePath)
-    # dv.fit(X)
-    x_transformed = dv.transform(X)
+    dv.fit(X, min_occurs=300)
     for k, v in inputs.items():
         item = inputs.get(k)
-        item.X = x_transformed
+        item.X = X
 
     return inputs
 
@@ -65,7 +64,7 @@ if __name__ == '__main__':
     items = prepare_multi_class_item(sentences, sentence_pos, classes)
     x_test, y_test = prepare_training_data(sentences_test, sentence_pos_test)
 
-    mlp = MultiClassPerceptron(save_to=savePath)
+    mlp = MultiClassPerceptron(save_to=savePath, n_process=2)
     mlp.train(items)
     y_pred = mlp.predict(inputs=x_test)
 
@@ -84,8 +83,7 @@ if __name__ == '__main__':
     OUTPUT
     ================
     Macro Score: 
-    {'precision': 0.4688312691886069, 'recall': 0.41199408085521244, 'fscore': 0.438578902879972}
+    {'precision': 0.7095003745834969, 'recall': 0.6112155768980928, 'fscore': 0.656700905707975}
     Micro Score: 
-    {'precision': 0.5829115853033511, 'recall': 0.5829115853033511, 'fscore': 0.5829115853033511}
-    PID: 317009
+    {'precision': 0.7788986969314838, 'recall': 0.7788986969314838, 'fscore': 0.7788986969314838}
     """

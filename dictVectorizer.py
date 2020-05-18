@@ -4,9 +4,8 @@ import pickle
 
 
 class CustomDictVectorizer:
-    def __init__(self, save_to="weights", min_feature_count=400):
+    def __init__(self, save_to="weights"):
         self.feature_list = list()
-        self._min_feature_count = min_feature_count
         self._savePath = save_to
 
     def save_to_file(self):
@@ -29,7 +28,7 @@ class CustomDictVectorizer:
         else:
             return None
 
-    def fit(self, inputs: list):
+    def fit(self, inputs: list, min_occurs=200):
         all_features = list()
         feature_count = dict()
         for features in inputs:
@@ -47,7 +46,7 @@ class CustomDictVectorizer:
         feature_count = {k: v for k, v in sorted(feature_count.items(), key=lambda item: item[1], reverse=True)}
 
         for c in feature_count:
-            if feature_count[c] > self._min_feature_count:
+            if feature_count[c] > min_occurs:
                 all_features.append(c)
             else:
                 break
@@ -55,6 +54,45 @@ class CustomDictVectorizer:
         self.feature_list = all_features
         print("Feature Vector length {}".format(len(all_features)))
         self.save_to_file()
+        return all_features
+
+    def get_features_length(self):
+        features = self.load_features()
+        if features is not None:
+            return len(features) + 1
+        else:
+            return None
+
+    def get_idx_values(self, f_list):
+        indexes = list()
+        values = list()
+        feature_list = self.load_features()
+
+        indexes.append(0)
+        values.append(1.)
+
+        if feature_list is not None:
+            for f in f_list:
+                if type(f_list[f]) is str:
+                    feature_name = f + '=' + f_list[f]
+                else:
+                    feature_name = f
+                try:
+                    idx = feature_list.index(feature_name) + 1  # shifting for bias value
+                except ValueError:
+                    idx = -1
+                indexes.append(idx)
+                if idx != -1:
+                    if type(f_list[f]) is int or type(f_list[f]) is float:
+                        values.append(f_list[f])
+                    else:
+                        values.append(1.)
+                else:
+                    values.append(0.)
+
+            return indexes, values
+        else:
+            return None
 
     def transform(self, inputs: list):
         feature_list = self.load_features()

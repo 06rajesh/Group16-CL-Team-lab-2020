@@ -21,18 +21,10 @@ class MultiClassItem:
 
 def run_perceptron(item: MultiClassItem, name, return_dict):
     print("Training Perceptron for {}".format(name))
-    prcptn = Perceptron()
+    prcptn = Perceptron(name=name)
     return_dict[name] = prcptn.train(item.X, item.Y)
     print("Training Perceptron for {} complete".format(name))
     print("===================================")
-
-
-# def dummy_process(name, return_dict):
-#     p_name = multiprocessing.current_process().name
-#     print("{} is starting".format(p_name))
-#     time.sleep(2)
-#     return_dict[name] = name
-#     print("{} is exiting".format(p_name))
 
 
 def chunkify(items, chunk_len):
@@ -40,9 +32,10 @@ def chunkify(items, chunk_len):
 
 
 class MultiClassPerceptron:
-    def __init__(self, save_to="weights"):
+    def __init__(self, save_to="weights", n_process=4):
         self._weights = dict()
         self._savePath = save_to
+        self._n_process = n_process
 
     def save_to_file(self):
         filename = os.path.join(self._savePath, "weights.pickle")
@@ -89,7 +82,7 @@ class MultiClassPerceptron:
 
         classes = list(inputs.keys())
         remained = [x for x in classes if x not in finished]
-        remained = chunkify(remained, 4)
+        remained = chunkify(remained, self._n_process)
 
         manager = multiprocessing.Manager()
         return_dict = manager.dict()
