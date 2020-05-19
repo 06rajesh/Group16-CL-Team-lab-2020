@@ -19,9 +19,9 @@ class MultiClassItem:
         self.Y = list()
 
 
-def run_perceptron(item: MultiClassItem, name, return_dict):
+def run_perceptron_process(item: MultiClassItem, name, features_dir, return_dict):
     print("Training Perceptron for {}".format(name))
-    prcptn = Perceptron(name=name)
+    prcptn = Perceptron(name=name, features_dir=features_dir)
     return_dict[name] = prcptn.train(item.X, item.Y)
     print("Training Perceptron for {} complete".format(name))
     print("===================================")
@@ -88,10 +88,11 @@ class MultiClassPerceptron:
         return_dict = manager.dict()
         jobs = list()
 
+        # running multiple process to utilize all cores
         for batch in remained:
             for key in batch:
                 item = inputs.get(key)
-                p = multiprocessing.Process(name="Process_" + str(key), target=run_perceptron, args=(item, key, return_dict))
+                p = multiprocessing.Process(name="Process_" + str(key), target=run_perceptron_process, args=(item, key, self._savePath, return_dict))
                 jobs.append(p)
                 p.start()
 

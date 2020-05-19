@@ -32,7 +32,7 @@ def prepare_multi_class_item(sentences, sentence_pos, classes):
                     item.Y.append(0.)
 
     dv = CustomDictVectorizer(save_to=savePath)
-    dv.fit(X, min_occurs=300)
+    dv.fit(X, min_occurs=400)
     for k, v in inputs.items():
         item = inputs.get(k)
         item.X = X
@@ -40,7 +40,7 @@ def prepare_multi_class_item(sentences, sentence_pos, classes):
     return inputs
 
 
-def prepare_training_data(s, s_p):
+def prepare_testing_data(s, s_p):
     x = list()
     y = list()
     t = PosToken()
@@ -58,14 +58,14 @@ def prepare_training_data(s, s_p):
 if __name__ == '__main__':
     dt = DataProvider(path='data')
 
-    sentences, sentence_pos, classes = dt.load_train_data()
-    sentences_test, sentence_pos_test, _ = dt.load_test_data()
+    # sentences, sentence_pos, classes = dt.load_train_data()
+    sentences_test, sentence_pos_test, classes = dt.load_test_data()
 
-    items = prepare_multi_class_item(sentences, sentence_pos, classes)
-    x_test, y_test = prepare_training_data(sentences_test, sentence_pos_test)
+    # items = prepare_multi_class_item(sentences, sentence_pos, classes)
+    x_test, y_test = prepare_testing_data(sentences_test, sentence_pos_test)
 
     mlp = MultiClassPerceptron(save_to=savePath, n_process=2)
-    mlp.train(items)
+    # mlp.train(items)
     y_pred = mlp.predict(inputs=x_test)
 
     ev = Evaluation(original=y_test, predicted=y_pred, classes=classes)
@@ -82,8 +82,8 @@ if __name__ == '__main__':
     """
     OUTPUT
     ================
-    Macro Score: 
-    {'precision': 0.7095003745834969, 'recall': 0.6112155768980928, 'fscore': 0.656700905707975}
-    Micro Score: 
-    {'precision': 0.7788986969314838, 'recall': 0.7788986969314838, 'fscore': 0.7788986969314838}
+    Macro Score:
+    {'precision': 0.7331322365168434, 'recall': 0.681210583093311, 'fscore': 0.7062183671421334}
+    Micro Score:
+    {'precision': 0.7909685942472827, 'recall': 0.7909685942472827, 'fscore': 0.7909685942472827}
     """

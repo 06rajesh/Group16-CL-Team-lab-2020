@@ -4,13 +4,13 @@ from dictVectorizer import CustomDictVectorizer
 
 
 class Perceptron:
-    def __init__(self, name=None, activation=0.0, learning_rate=0.1, epochs=10):
+    def __init__(self, name=None, features_dir="weights", activation=0.0, learning_rate=0.1, epochs=10):
         self._name = name
         self._activation = activation
         self._learning_rate = learning_rate
         self._epochs = epochs
         self._weights = list()
-        self._features = list()
+        self._features_dir = features_dir
 
     def activation_function(self, score):
         if score >= self._activation:
@@ -19,7 +19,7 @@ class Perceptron:
             return 0
 
     def train(self, x, y):
-        dv = CustomDictVectorizer()
+        dv = CustomDictVectorizer(save_to=self._features_dir)
         features_len = dv.get_features_length()
         w = np.zeros(features_len)
         for e in range(0, self._epochs):
