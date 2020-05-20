@@ -20,6 +20,14 @@ class MultiClassItem:
 
 
 def run_perceptron_process(item: MultiClassItem, name, features_dir, return_dict):
+    """
+    Run Perceptron classifier for each item in a different process
+    :param item: A MulticlassItem to run perceptron
+    :param name: string, name of the parts of speech class
+    :param features_dir: string, path where list of features is saved
+    :param return_dict: multiprocessing shared dict, return the trained weight to multiPerceptronClass
+                        using this dictionary
+    """
     print("Training Perceptron for {}".format(name))
     prcptn = Perceptron(name=name, features_dir=features_dir)
     return_dict[name] = prcptn.train(item.X, item.Y)
@@ -28,6 +36,12 @@ def run_perceptron_process(item: MultiClassItem, name, features_dir, return_dict
 
 
 def chunkify(items, chunk_len):
+    """
+    create batches of Parts of speech classes
+    :param items: list of strings/classes/tags
+    :param chunk_len: number, number of chunk in each batch
+    :return list, list of chunks, each chunk contains chunk_len number of strings
+    """
     return [items[i:i+chunk_len] for i in range(0, len(items), chunk_len)]
 
 
@@ -38,6 +52,9 @@ class MultiClassPerceptron:
         self._n_process = n_process
 
     def save_to_file(self):
+        """
+        Save weight to _savePath directory in weights.pickle file
+        """
         filename = os.path.join(self._savePath, "weights.pickle")
         print("Saving model to file {}".format(filename))
         print("===================================")
@@ -46,6 +63,10 @@ class MultiClassPerceptron:
         outfile.close()
 
     def load_weights(self):
+        """
+        load weight from weights.pickle file in _savePath directory
+        :return weights, dict
+        """
         filename = os.path.join(self._savePath, "weights.pickle")
 
         if len(self._weights) > 0:
@@ -114,7 +135,7 @@ class MultiClassPerceptron:
     def predict(self, inputs):
         """
         Predict POS tag based of previously trained weights
-        :param inputs: array of inputs, numpy array
+        :param inputs: list of inputs, Featured dict created by PosToken Class
         :return: list of predictied tag
         """
         y_out = list()

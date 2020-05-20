@@ -9,7 +9,7 @@ savePath = "weights"
 
 def prepare_multi_class_item(sentences, sentence_pos, classes):
     """
-    Preapre Items for MultiClassPerceptron Using MultiClassItem
+    Prepare Items for MultiClassPerceptron Using MultiClassItem
     :param sentences: List of Sentences, which each is a list of tokens
     :param sentence_pos: List of Sentenece Pos, which each is list of POS tag
     :param classes: list of classes in data
@@ -31,8 +31,11 @@ def prepare_multi_class_item(sentences, sentence_pos, classes):
                 else:
                     item.Y.append(0.)
 
-    dv = CustomDictVectorizer(save_to=savePath)
-    dv.fit(X, min_occurs=400)
+    # Uncomment the following lines if you want to recreate the features from training data
+    # Features list is already created in weights directory
+    # ==================================
+    # dv = CustomDictVectorizer(save_to=savePath)
+    # dv.fit(X, min_occurs=400)
     for k, v in inputs.items():
         item = inputs.get(k)
         item.X = X
@@ -41,6 +44,12 @@ def prepare_multi_class_item(sentences, sentence_pos, classes):
 
 
 def prepare_testing_data(s, s_p):
+    """
+    Preapre testing data for evaluation
+    :param s: List of Sentences, which each is a list of tokens
+    :param s_p: List of Sentenece Pos, which each is list of POS tag
+    :return: list of inputs and list of expected class
+    """
     x = list()
     y = list()
     t = PosToken()
@@ -58,14 +67,19 @@ def prepare_testing_data(s, s_p):
 if __name__ == '__main__':
     dt = DataProvider(path='data')
 
-    # sentences, sentence_pos, classes = dt.load_train_data()
-    sentences_test, sentence_pos_test, classes = dt.load_test_data()
+    sentences, sentence_pos, classes = dt.load_train_data()
+    sentences_test, sentence_pos_test, _ = dt.load_test_data()
 
-    # items = prepare_multi_class_item(sentences, sentence_pos, classes)
+    items = prepare_multi_class_item(sentences, sentence_pos, classes)
     x_test, y_test = prepare_testing_data(sentences_test, sentence_pos_test)
 
     mlp = MultiClassPerceptron(save_to=savePath, n_process=2)
+
+    # Uncomment the following line If you want to train again
+    # Trained weights are already saved on weights directory
+    # =====================================
     # mlp.train(items)
+
     y_pred = mlp.predict(inputs=x_test)
 
     ev = Evaluation(original=y_test, predicted=y_pred, classes=classes)

@@ -4,11 +4,18 @@ import pickle
 
 
 class CustomDictVectorizer:
+    """
+    Class to turn featured dict key and value into a unique feature
+    and maintain, save feature list
+    """
     def __init__(self, save_to="weights"):
         self.feature_list = list()
         self._savePath = save_to
 
     def save_to_file(self):
+        """
+        Save features to _savePath directory in features.pickle file
+        """
         filename = os.path.join(self._savePath, "features.pickle")
         print("Saving model to file {}".format(filename))
         print("===================================")
@@ -17,6 +24,10 @@ class CustomDictVectorizer:
         outfile.close()
 
     def load_features(self):
+        """
+        load weight from features.pickle file in _savePath directory
+        :return features, list
+        """
         filename = os.path.join(self._savePath, "features.pickle")
         if len(self.feature_list) > 0:
             return self.feature_list
@@ -29,6 +40,12 @@ class CustomDictVectorizer:
             return None
 
     def fit(self, inputs: list, min_occurs=200):
+        """
+        create features list from all the provided features, converts feature name and value into a unique feature
+        :param inputs: list of features where each item is a dictionary
+        :param min_occurs: number, number of minimum count of a feature in total data
+        :return: list, features
+        """
         all_features = list()
         feature_count = dict()
         for features in inputs:
@@ -57,13 +74,21 @@ class CustomDictVectorizer:
         return all_features
 
     def get_features_length(self):
+        """
+        :return: length of the features list / feature vector
+        """
         features = self.load_features()
         if features is not None:
-            return len(features) + 1
+            return len(features) + 1    # additional 1 for the bias
         else:
             return None
 
     def get_idx_values(self, f_list):
+        """
+        calculate feature indexes from the features dict created by PosToken class
+        :param f_list: dict, dictionary of features with feature key and value
+        :return: features index list in features list and feature values
+        """
         indexes = list()
         values = list()
         feature_list = self.load_features()
@@ -95,6 +120,11 @@ class CustomDictVectorizer:
             return None
 
     def transform(self, inputs: list):
+        """
+        convert input of features into feature vectors
+        :param inputs: list, list of input feature dict, created by PosToken Class
+        :return: list of feature vectors shape (number of inputs, number of features in list)
+        """
         feature_list = self.load_features()
         print("Fitting inputs with {} features".format(len(feature_list)))
         if feature_list is not None:

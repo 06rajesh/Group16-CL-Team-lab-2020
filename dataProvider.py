@@ -44,6 +44,11 @@ class DataProvider:
 
     @staticmethod
     def construct_sentences(lines):
+        """
+        Reconstruct Sentences from all the lines read by CSV reader
+        :param lines, all lines read by CSV reader
+        :return: list of Sentences, List of POS list for each sentences and total Classes/Tags
+        """
         sentences = []
         sentences_pos = []
 
@@ -67,6 +72,10 @@ class DataProvider:
         return sentences, sentences_pos, classes
 
     def load_train_data(self):
+        """
+        Load the training data from the train.col file in given directory
+        :return: list of Sentences, List of POS list for each sentences and total Classes/Tags
+        """
 
         with open(self.path + '/train.col') as csv_file:
             csv_reader = csv.reader(csv_file, delimiter='\t')
@@ -81,6 +90,10 @@ class DataProvider:
         return sentences, sentences_pos, classes
 
     def load_test_data(self):
+        """
+        Load the testing data from the test.col file in given directory
+        :return: list of Sentences, List of POS list for each sentences and total Classes/Tags
+        """
         with open(self.path + '/test.col') as csv_file:
             csv_reader = csv.reader(csv_file, delimiter='\t')
             sentences, sentences_pos, classes = self.construct_sentences(csv_reader)

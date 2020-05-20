@@ -7,13 +7,20 @@ class Evaluation:
         self.scores = {}
 
     def calculate(self):
+        """
+        fit the evaluation class to its original and predicted value,
+        compute scores for each class
+        """
         for tag in self.classes:
             if len(tag) > 0:
                 self.scores[tag] = self.calculate_class_score(tag)
 
-    # A macro-average will compute the metric independently for each class and then take the average (hence treating all
-    # classes equally)
     def get_macro_score(self):
+        """
+        A macro-average will compute the metric independently for each class and then take the average (hence treating all
+        classes equally)
+        :return: dict of precision, recall and fscore
+        """
         total_pr = 0
         total_rc = 0
         count = 0
@@ -35,8 +42,11 @@ class Evaluation:
             'fscore': fscore
         }
 
-    # micro-average will aggregate the contributions of all classes to compute the average metric.
     def get_micro_score(self):
+        """
+        micro-average will aggregate the contributions of all classes to compute the average metric.
+        :return: dict of precision, recall and fscore
+        """
         tp = 0
         fn = 0
         fp = 0

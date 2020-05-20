@@ -13,12 +13,23 @@ class Perceptron:
         self._features_dir = features_dir
 
     def activation_function(self, score):
+        """
+        activate the prediction depending on the socre
+        :param score: float, values computed by current weight
+        :return: boolean
+        """
         if score >= self._activation:
             return 1
         else:
             return 0
 
     def train(self, x, y):
+        """
+        Train Perceptron model
+        :param x: list of feature dict created by POStoken class
+        :param y: list of single pos class 1 if true or 0 if false
+        :return: weights, dict of features list
+        """
         dv = CustomDictVectorizer(save_to=self._features_dir)
         features_len = dv.get_features_length()
         w = np.zeros(features_len)
