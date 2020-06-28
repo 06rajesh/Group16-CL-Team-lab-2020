@@ -69,7 +69,7 @@ if __name__ == '__main__':
 
     sentences, sentence_pos, classes = dt.load_train_data()
     sentences_test, sentence_pos_test, _ = dt.load_test_data()
-
+    word_embeddings, dimension = dt.load_glove_data();
     items = prepare_multi_class_item(sentences, sentence_pos, classes)
     x_test, y_test = prepare_testing_data(sentences_test, sentence_pos_test)
 
