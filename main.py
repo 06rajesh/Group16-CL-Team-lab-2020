@@ -1,103 +1,50 @@
-from dataProvider import DataProvider
-from evaluation import Evaluation
-from posToken import PosToken
-from multiClassPerceptron import MultiClassItem, MultiClassPerceptron
-from dictVectorizer import CustomDictVectorizer
-
-savePath = "weights"
-
-
-def prepare_multi_class_item(sentences, sentence_pos, classes):
-    """
-    Prepare Items for MultiClassPerceptron Using MultiClassItem
-    :param sentences: List of Sentences, which each is a list of tokens
-    :param sentence_pos: List of Sentenece Pos, which each is list of POS tag
-    :param classes: list of classes in data
-    :return: list of MultiClassItem
-    """
-    inputs = dict()
-    for pos in classes:
-        inputs[pos] = MultiClassItem(pos)
-    X = list()
-    t = PosToken()
-    for i in range(len(sentences)):
-        for j in range(len(sentences[i])):
-            features = t.get_features(sentences[i], j)
-            X.append(features)
-            for k, v in inputs.items():
-                item = inputs.get(k)
-                if sentence_pos[i][j] == k:
-                    item.Y.append(1.)
-                else:
-                    item.Y.append(0.)
-
-    # Uncomment the following lines if you want to recreate the features from training data
-    # Features list is already created in weights directory
-    # ==================================
-    # dv = CustomDictVectorizer(save_to=savePath)
-    # dv.fit(X, min_occurs=400)
-    for k, v in inputs.items():
-        item = inputs.get(k)
-        item.X = X
-
-    return inputs
+import embeddings
+import data
+from sklearn.manifold import TSNE
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+from rnn import PosRNN
 
 
-def prepare_testing_data(s, s_p):
-    """
-    Preapre testing data for evaluation
-    :param s: List of Sentences, which each is a list of tokens
-    :param s_p: List of Sentenece Pos, which each is list of POS tag
-    :return: list of inputs and list of expected class
-    """
-    x = list()
-    y = list()
-    t = PosToken()
-    for i in range(len(s)):
-        for j in range(len(s[i])):
-            features = t.get_features(s[i], j)
-            x.append(features)
-            y.append(s_p[i][j])
+def plot_embeddings_by_class(words_by_class):
+    joined = list()
+    labels = list()
 
-    dv = CustomDictVectorizer(save_to=savePath)
-    x_transformed = dv.transform(x)
-    return x_transformed, y
+    colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22',
+              '#17becf']
+    shapes = ["o", "v", "^", "<", ">", "1", "2", "3", "4", "8", "s", "p"]
+
+    for i in range(len(words_by_class)):
+        single_class_words = list(words_by_class[i])
+        joined.extend(single_class_words)
+        labels.extend([i]*len(single_class_words))
+
+    vectors = [g.get_embedding_val(word) for word in joined]
+
+    tsne = TSNE(n_components=3, random_state=0)
+    Y = tsne.fit_transform(vectors)
+
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+
+    for i in range(len(Y)):
+        ax.scatter(Y[i][0], Y[i][1], Y[i][2], c=colors[labels[i]], marker=shapes[labels[i]])
+        ax.text(Y[i][0], Y[i][1], Y[i][2], '%s' % (joined[i]), size=5, zorder=1, color=colors[labels[i]])
+
+    plt.show()
 
 
 if __name__ == '__main__':
-    dt = DataProvider(path='data')
+    # g = embeddings.Glove()
+    # g.load()
+    # closest = g.find_closest_words("king")
 
-    sentences, sentence_pos, classes = dt.load_train_data()
-    sentences_test, sentence_pos_test, _ = dt.load_test_data()
+    d = data.Provider()
+    sentences, sentence_pos, classes = d.load_train_data()
 
-    items = prepare_multi_class_item(sentences, sentence_pos, classes)
-    x_test, y_test = prepare_testing_data(sentences_test, sentence_pos_test)
+    model = PosRNN()
+    model.train(sentences, sentence_pos, classes)
 
-    mlp = MultiClassPerceptron(save_to=savePath, n_process=2)
-
-    # Uncomment the following line If you want to train again
-    # Trained weights are already saved on weights directory
-    # =====================================
-    # mlp.train(items)
-
-    y_pred = mlp.predict(inputs=x_test)
-
-    ev = Evaluation(original=y_test, predicted=y_pred, classes=classes)
-    ev.calculate()
-
-    print("Macro Score: ")
-    macro = ev.get_macro_score()
-    print(macro)
-
-    print("Micro Score: ")
-    micro = ev.get_micro_score()
-    print(micro)
-
-    """
-    OUTPUT
-    ================
-    Macro Score:
-    {'precision': 0.7331322365168434, 'recall': 0.681210583093311, 'fscore': 0.7062183671421334}
-    Micro Score:
-    {'precision': 0.7909685942472827, 'recall': 0.7909685942472827, 'fscore': 0.7909685942472827}
-    """
+    test_sentences, test_sentence_pos, _ = d.load_test_data()
+    model.evaluate(test_sentences, test_sentence_pos)
+    # plot_embeddings_by_class([nn_list, jj_list])
