@@ -39,5 +39,6 @@ class Glove:
         try:
             val = self.embeddings_dict[term]
         except KeyError:
-            val = self.average
+            # val = self.average
+            val = None
         return val

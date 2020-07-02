@@ -103,8 +103,10 @@ class PosRNN:
         e_matrix = np.zeros((vocab_size, embed.n_dimension))
         i = 0
         for word in words:
-            e_matrix[i] = embed.get_embedding_val(word)
-            i += 1
+            val = embed.get_embedding_val(word)
+            if val is not None:
+                e_matrix[i] = embed.get_embedding_val(word)
+                i += 1
 
         self.embedding_matrix = e_matrix
         self.feature_length = embed.n_dimension
@@ -156,7 +158,7 @@ class PosRNN:
         cat_train_tags_y = self.to_categorical(train_y, len(self.tags_to_index))
 
         model = self.create_model()
-        model.fit(train_x, cat_train_tags_y, batch_size=128, epochs=40, validation_split=0.2)
+        model.fit(train_x, cat_train_tags_y, batch_size=128, epochs=20, validation_split=0.2)
 
         # serialize weights to HDF5
         filename = os.path.join("checkpoints", "model.h5")
