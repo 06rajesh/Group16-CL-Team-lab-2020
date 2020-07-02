@@ -1,11 +1,10 @@
 from typing import Dict
+import multiprocessing
 import numpy as np
 import operator
 import pickle
 import os.path
-
 from perceptron import Perceptron
-from posToken import PosToken
 
 
 class MultiClassItem:
@@ -20,10 +19,23 @@ class MultiClassItem:
         self.Y = list()
 
 
+def run_perceptron_process(item: MultiClassItem, name, features_dir, return_dict):
+    print("Training Perceptron for {}".format(name))
+    prcptn = Perceptron(name=name, features_dir=features_dir)
+    return_dict[name] = prcptn.train(item.X, item.Y)
+    print("Training Perceptron for {} complete".format(name))
+    print("===================================")
+
+
+def chunkify(items, chunk_len):
+    return [items[i:i+chunk_len] for i in range(0, len(items), chunk_len)]
+
+
 class MultiClassPerceptron:
-    def __init__(self, save_to="weights"):
+    def __init__(self, save_to="weights", n_process=4):
         self._weights = dict()
         self._savePath = save_to
+        self._n_process = n_process
 
     def save_to_file(self):
         filename = os.path.join(self._savePath, "weights.pickle")
@@ -68,16 +80,31 @@ class MultiClassPerceptron:
             f_list = ", ".join(finished)
             print("Already Finished : {}".format(f_list))
 
-        for key, val in inputs.items():
-            if key not in finished:
+        classes = list(inputs.keys())
+        remained = [x for x in classes if x not in finished]
+        remained = chunkify(remained, self._n_process)
+
+        manager = multiprocessing.Manager()
+        return_dict = manager.dict()
+        jobs = list()
+
+        # running multiple process to utilize all cores
+        for batch in remained:
+            for key in batch:
                 item = inputs.get(key)
-                print("Training Perceptron for {}".format(key))
-                prcptn = Perceptron()
-                self._weights[key] = prcptn.train(item.X, item.Y)
+                p = multiprocessing.Process(name="Process_" + str(key), target=run_perceptron_process, args=(item, key, self._savePath, return_dict))
+                jobs.append(p)
+                p.start()
+
+            for proc in jobs:
+                proc.join()
+
+            for key in batch:
+                self._weights[key] = return_dict[key]
                 count += 1
-                print("Training Perceptron for {} complete. {}/{}".format(key, count, total))
-                print("===================================")
-                self.save_to_file()
+                print("Training Completed {}/{}".format(count, total))
+
+            self.save_to_file()
 
         print("Training Completed.")
         print("===================================")

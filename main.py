@@ -4,6 +4,8 @@ from posToken import PosToken
 from multiClassPerceptron import MultiClassItem, MultiClassPerceptron
 from dictVectorizer import CustomDictVectorizer
 
+savePath = "weights"
+
 
 def prepare_multi_class_item(sentences, sentence_pos, classes):
     """
@@ -29,17 +31,16 @@ def prepare_multi_class_item(sentences, sentence_pos, classes):
                 else:
                     item.Y.append(0.)
 
-    dv = CustomDictVectorizer()
-    # dv.fit(X)
-    x_transformed = dv.transform(X)
+    dv = CustomDictVectorizer(save_to=savePath)
+    dv.fit(X, min_occurs=400)
     for k, v in inputs.items():
         item = inputs.get(k)
-        item.X = x_transformed
+        item.X = X
 
     return inputs
 
 
-def prepare_training_data(s, s_p):
+def prepare_testing_data(s, s_p):
     x = list()
     y = list()
     t = PosToken()
@@ -49,7 +50,7 @@ def prepare_training_data(s, s_p):
             x.append(features)
             y.append(s_p[i][j])
 
-    dv = CustomDictVectorizer()
+    dv = CustomDictVectorizer(save_to=savePath)
     x_transformed = dv.transform(x)
     return x_transformed, y
 
@@ -57,14 +58,14 @@ def prepare_training_data(s, s_p):
 if __name__ == '__main__':
     dt = DataProvider(path='data')
 
-    sentences, sentence_pos, classes = dt.load_train_data()
-    sentences_test, sentence_pos_test, _ = dt.load_test_data()
+    # sentences, sentence_pos, classes = dt.load_train_data()
+    sentences_test, sentence_pos_test, classes = dt.load_test_data()
 
-    items = prepare_multi_class_item(sentences, sentence_pos, classes)
-    x_test, y_test = prepare_training_data(sentences_test, sentence_pos_test)
+    # items = prepare_multi_class_item(sentences, sentence_pos, classes)
+    x_test, y_test = prepare_testing_data(sentences_test, sentence_pos_test)
 
-    mlp = MultiClassPerceptron()
-    mlp.train(items)
+    mlp = MultiClassPerceptron(save_to=savePath, n_process=2)
+    # mlp.train(items)
     y_pred = mlp.predict(inputs=x_test)
 
     ev = Evaluation(original=y_test, predicted=y_pred, classes=classes)
@@ -81,9 +82,8 @@ if __name__ == '__main__':
     """
     OUTPUT
     ================
-    Macro Score: 
-    {'precision': 0.4688312691886069, 'recall': 0.41199408085521244, 'fscore': 0.438578902879972}
-    Micro Score: 
-    {'precision': 0.5829115853033511, 'recall': 0.5829115853033511, 'fscore': 0.5829115853033511}
-    PID: 317009
+    Macro Score:
+    {'precision': 0.7331322365168434, 'recall': 0.681210583093311, 'fscore': 0.7062183671421334}
+    Micro Score:
+    {'precision': 0.7909685942472827, 'recall': 0.7909685942472827, 'fscore': 0.7909685942472827}
     """
