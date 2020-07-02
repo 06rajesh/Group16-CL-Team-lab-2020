@@ -1,0 +1,716 @@
+Train Data Loaded
+Total Classes: 48
+Total Sentences: 30060
+==============================
+Test Data Loaded
+Total Classes: 45
+Total Sentences: 1382
+==============================
+Feature Vector length 1577
+Saving model to file weights/features.pickle
+===================================
+Fitting inputs with 1577 features
+Training Perceptron for .
+Training Perceptron for WDT
+Training Perceptron for WRB
+Training Perceptron for HYPH
+HYPH : Epochs 0 completed in 473.14697909355164
+WRB : Epochs 0 completed in 473.2805938720703
+WDT : Epochs 0 completed in 473.90214824676514
+. : Epochs 0 completed in 475.3287682533264
+HYPH : Epochs 1 completed in 473.74332451820374
+WDT : Epochs 1 completed in 476.21190762519836
+. : Epochs 1 completed in 479.4854121208191
+WRB : Epochs 1 completed in 481.96175622940063
+HYPH : Epochs 2 completed in 472.4694755077362
+WDT : Epochs 2 completed in 474.9598457813263
+. : Epochs 2 completed in 476.6187424659729
+WRB : Epochs 2 completed in 480.7486355304718
+HYPH : Epochs 3 completed in 471.7849192619324
+WDT : Epochs 3 completed in 474.0602316856384
+. : Epochs 3 completed in 479.40983033180237
+WRB : Epochs 3 completed in 479.53527998924255
+HYPH : Epochs 4 completed in 472.25612449645996
+WDT : Epochs 4 completed in 475.2562081813812
+. : Epochs 4 completed in 476.64161944389343
+WRB : Epochs 4 completed in 480.9120590686798
+HYPH : Epochs 5 completed in 475.91956067085266
+WDT : Epochs 5 completed in 478.0759816169739
+. : Epochs 5 completed in 476.6858332157135
+WRB : Epochs 5 completed in 480.62232780456543
+HYPH : Epochs 6 completed in 474.5497143268585
+WDT : Epochs 6 completed in 476.2833766937256
+. : Epochs 6 completed in 476.710631608963
+WRB : Epochs 6 completed in 480.8934078216553
+HYPH : Epochs 7 completed in 478.3876690864563
+WDT : Epochs 7 completed in 476.13243675231934
+. : Epochs 7 completed in 480.53958082199097
+WRB : Epochs 7 completed in 481.9688968658447
+HYPH : Epochs 8 completed in 481.1649763584137
+WDT : Epochs 8 completed in 475.90620851516724
+. : Epochs 8 completed in 477.01526498794556
+WRB : Epochs 8 completed in 480.9657723903656
+HYPH : Epochs 9 completed in 472.49503660202026
+Training Perceptron for HYPH complete
+===================================
+WDT : Epochs 9 completed in 481.9864537715912
+Training Perceptron for WDT complete
+===================================
+. : Epochs 9 completed in 479.4551239013672
+Training Perceptron for . complete
+===================================
+WRB : Epochs 9 completed in 480.48731875419617
+Training Perceptron for WRB complete
+===================================
+Training Completed 1/48
+Training Completed 2/48
+Training Completed 3/48
+Training Completed 4/48
+Saving model to file weights/weights.pickle
+===================================
+Training Perceptron for NNPS
+Training Perceptron for CD
+Training Perceptron for CC
+Training Perceptron for SYM
+NNPS : Epochs 0 completed in 472.99751830101013
+CD : Epochs 0 completed in 473.3998601436615
+CC : Epochs 0 completed in 475.6562030315399
+SYM : Epochs 0 completed in 475.87345027923584
+CD : Epochs 1 completed in 472.8743677139282
+NNPS : Epochs 1 completed in 476.7179124355316
+CC : Epochs 1 completed in 476.5287778377533
+SYM : Epochs 1 completed in 481.1726117134094
+CD : Epochs 2 completed in 471.363205909729
+NNPS : Epochs 2 completed in 473.8799078464508
+CC : Epochs 2 completed in 474.6661329269409
+SYM : Epochs 2 completed in 479.00156021118164
+CD : Epochs 3 completed in 472.01776814460754
+NNPS : Epochs 3 completed in 474.9526598453522
+CC : Epochs 3 completed in 476.3903498649597
+SYM : Epochs 3 completed in 480.3237793445587
+CD : Epochs 4 completed in 471.4049804210663
+NNPS : Epochs 4 completed in 475.1154589653015
+CC : Epochs 4 completed in 474.3442006111145
+SYM : Epochs 4 completed in 480.5282702445984
+CD : Epochs 5 completed in 471.36448311805725
+NNPS : Epochs 5 completed in 474.99863505363464
+CC : Epochs 5 completed in 481.47601795196533
+SYM : Epochs 5 completed in 481.1499888896942
+CD : Epochs 6 completed in 471.429310798645
+NNPS : Epochs 6 completed in 477.93549823760986
+CC : Epochs 6 completed in 480.21551489830017
+SYM : Epochs 6 completed in 480.6937966346741
+CD : Epochs 7 completed in 471.37358927726746
+NNPS : Epochs 7 completed in 475.58182978630066
+CC : Epochs 7 completed in 479.2627146244049
+SYM : Epochs 7 completed in 481.4731345176697
+CD : Epochs 8 completed in 471.80477952957153
+NNPS : Epochs 8 completed in 478.3416199684143
+CC : Epochs 8 completed in 480.3837728500366
+SYM : Epochs 8 completed in 481.6609683036804
+CD : Epochs 9 completed in 471.7895677089691
+Training Perceptron for CD complete
+===================================
+NNPS : Epochs 9 completed in 474.29116439819336
+Training Perceptron for NNPS complete
+===================================
+CC : Epochs 9 completed in 482.20106768608093
+Training Perceptron for CC complete
+===================================
+SYM : Epochs 9 completed in 480.2025179862976
+Training Perceptron for SYM complete
+===================================
+Training Completed 5/48
+Training Completed 6/48
+Training Completed 7/48
+Training Completed 8/48
+Saving model to file weights/weights.pickle
+===================================
+Training Perceptron for NNP
+Training Perceptron for NNS
+Training Perceptron for ''
+Training Perceptron for VBZ
+NNS : Epochs 0 completed in 473.1546034812927
+VBZ : Epochs 0 completed in 473.56058049201965
+'' : Epochs 0 completed in 473.61538767814636
+NNP : Epochs 0 completed in 474.2098891735077
+VBZ : Epochs 1 completed in 473.5543601512909
+NNS : Epochs 1 completed in 474.2244575023651
+NNP : Epochs 1 completed in 476.6213872432709
+'' : Epochs 1 completed in 480.86867570877075
+VBZ : Epochs 2 completed in 472.4200670719147
+NNS : Epochs 2 completed in 472.98712277412415
+NNP : Epochs 2 completed in 474.7862334251404
+'' : Epochs 2 completed in 479.1708824634552
+NNS : Epochs 3 completed in 474.53502106666565
+VBZ : Epochs 3 completed in 481.6537039279938
+NNP : Epochs 3 completed in 476.7594995498657
+'' : Epochs 3 completed in 479.7453842163086
+NNS : Epochs 4 completed in 474.347149848938
+VBZ : Epochs 4 completed in 475.43088841438293
+NNP : Epochs 4 completed in 479.26941752433777
+'' : Epochs 4 completed in 477.5275511741638
+NNS : Epochs 5 completed in 478.79683446884155
+VBZ : Epochs 5 completed in 476.0886447429657
+NNP : Epochs 5 completed in 479.0007219314575
+'' : Epochs 5 completed in 477.860906124115
+NNS : Epochs 6 completed in 477.3790991306305
+VBZ : Epochs 6 completed in 475.77036690711975
+NNP : Epochs 6 completed in 481.49579548835754
+'' : Epochs 6 completed in 478.21488761901855
+NNS : Epochs 7 completed in 476.50828886032104
+VBZ : Epochs 7 completed in 477.24580478668213
+NNP : Epochs 7 completed in 480.8868098258972
+'' : Epochs 7 completed in 477.358304977417
+VBZ : Epochs 8 completed in 475.0178368091583
+NNS : Epochs 8 completed in 480.9767715930939
+'' : Epochs 8 completed in 477.9386968612671
+NNP : Epochs 8 completed in 481.89090299606323
+VBZ : Epochs 9 completed in 480.8247699737549
+Training Perceptron for VBZ complete
+===================================
+NNS : Epochs 9 completed in 480.25980281829834
+Training Perceptron for NNS complete
+===================================
+'' : Epochs 9 completed in 477.6121599674225
+Training Perceptron for '' complete
+===================================
+NNP : Epochs 9 completed in 482.5891387462616
+Training Perceptron for NNP complete
+===================================
+Training Completed 9/48
+Training Completed 10/48
+Training Completed 11/48
+Training Completed 12/48
+Saving model to file weights/weights.pickle
+===================================
+Training Perceptron for POS
+Training Perceptron for RBS
+Training Perceptron for TO
+Training Perceptron for UH
+TO : Epochs 0 completed in 506.8753695487976
+UH : Epochs 0 completed in 508.70740723609924
+RBS : Epochs 0 completed in 509.2779664993286
+POS : Epochs 0 completed in 509.9794833660126
+TO : Epochs 1 completed in 469.75447821617126
+UH : Epochs 1 completed in 475.62153363227844
+POS : Epochs 1 completed in 476.98995304107666
+RBS : Epochs 1 completed in 483.77272939682007
+TO : Epochs 2 completed in 467.4559609889984
+UH : Epochs 2 completed in 476.1523005962372
+POS : Epochs 2 completed in 475.4974868297577
+RBS : Epochs 2 completed in 481.5022990703583
+TO : Epochs 3 completed in 470.23903346061707
+UH : Epochs 3 completed in 473.94848465919495
+POS : Epochs 3 completed in 476.634966135025
+RBS : Epochs 3 completed in 483.31265592575073
+TO : Epochs 4 completed in 467.7099931240082
+UH : Epochs 4 completed in 474.2095031738281
+POS : Epochs 4 completed in 474.39603567123413
+RBS : Epochs 4 completed in 481.8548288345337
+TO : Epochs 5 completed in 467.56164050102234
+UH : Epochs 5 completed in 474.49039340019226
+POS : Epochs 5 completed in 478.9749631881714
+RBS : Epochs 5 completed in 482.3828692436218
+TO : Epochs 6 completed in 468.6665949821472
+UH : Epochs 6 completed in 474.40341687202454
+POS : Epochs 6 completed in 476.09086418151855
+RBS : Epochs 6 completed in 480.5095908641815
+TO : Epochs 7 completed in 469.6317172050476
+UH : Epochs 7 completed in 474.031911611557
+POS : Epochs 7 completed in 473.85789251327515
+RBS : Epochs 7 completed in 478.50495409965515
+TO : Epochs 8 completed in 471.9940912723541
+UH : Epochs 8 completed in 472.9140205383301
+POS : Epochs 8 completed in 476.8699152469635
+RBS : Epochs 8 completed in 479.3897132873535
+TO : Epochs 9 completed in 467.3855860233307
+Training Perceptron for TO complete
+===================================
+UH : Epochs 9 completed in 472.66363430023193
+Training Perceptron for UH complete
+===================================
+POS : Epochs 9 completed in 472.8757908344269
+Training Perceptron for POS complete
+===================================
+RBS : Epochs 9 completed in 476.5824489593506
+Training Perceptron for RBS complete
+===================================
+Training Completed 13/48
+Training Completed 14/48
+Training Completed 15/48
+Training Completed 16/48
+Saving model to file weights/weights.pickle
+===================================
+Training Perceptron for LS
+Training Perceptron for PDT
+Training Perceptron for WP
+Training Perceptron for -LRB-
+PDT : Epochs 0 completed in 475.70175433158875
+WP : Epochs 0 completed in 475.95425724983215
+-LRB- : Epochs 0 completed in 476.4600582122803
+LS : Epochs 0 completed in 477.6023895740509
+PDT : Epochs 1 completed in 476.12911796569824
+WP : Epochs 1 completed in 477.40505290031433
+LS : Epochs 1 completed in 476.38026213645935
+-LRB- : Epochs 1 completed in 478.12312722206116
+WP : Epochs 2 completed in 474.77736234664917
+LS : Epochs 2 completed in 477.2388689517975
+PDT : Epochs 2 completed in 479.4590401649475
+-LRB- : Epochs 2 completed in 480.07022762298584
+WP : Epochs 3 completed in 474.9765565395355
+LS : Epochs 3 completed in 482.3065664768219
+PDT : Epochs 3 completed in 482.912921667099
+-LRB- : Epochs 3 completed in 482.36092710494995
+WP : Epochs 4 completed in 474.9619209766388
+LS : Epochs 4 completed in 475.67809009552
+PDT : Epochs 4 completed in 478.53998947143555
+-LRB- : Epochs 4 completed in 478.4078805446625
+WP : Epochs 5 completed in 474.10548853874207
+PDT : Epochs 5 completed in 478.3876299858093
+LS : Epochs 5 completed in 482.6120517253876
+-LRB- : Epochs 5 completed in 477.6325886249542
+WP : Epochs 6 completed in 473.9161171913147
+PDT : Epochs 6 completed in 478.0047390460968
+-LRB- : Epochs 6 completed in 479.08133029937744
+LS : Epochs 6 completed in 486.16240644454956
+WP : Epochs 7 completed in 473.39756083488464
+-LRB- : Epochs 7 completed in 477.9324424266815
+PDT : Epochs 7 completed in 483.9631998538971
+LS : Epochs 7 completed in 478.6957416534424
+WP : Epochs 8 completed in 473.5293173789978
+-LRB- : Epochs 8 completed in 478.5643529891968
+LS : Epochs 8 completed in 478.23729157447815
+PDT : Epochs 8 completed in 488.6253306865692
+WP : Epochs 9 completed in 474.12116742134094
+Training Perceptron for WP complete
+===================================
+-LRB- : Epochs 9 completed in 480.6978027820587
+Training Perceptron for -LRB- complete
+===================================
+LS : Epochs 9 completed in 477.93445110321045
+Training Perceptron for LS complete
+===================================
+PDT : Epochs 9 completed in 481.9686450958252
+Training Perceptron for PDT complete
+===================================
+Training Completed 17/48
+Training Completed 18/48
+Training Completed 19/48
+Training Completed 20/48
+Saving model to file weights/weights.pickle
+===================================
+Training Perceptron for WP$
+Training Perceptron for VBD
+Training Perceptron for VBN
+Training Perceptron for VBP
+VBD : Epochs 0 completed in 472.4175772666931
+VBP : Epochs 0 completed in 475.16258096694946
+WP$ : Epochs 0 completed in 475.5675628185272
+VBN : Epochs 0 completed in 478.1659770011902
+VBD : Epochs 1 completed in 472.7821147441864
+WP$ : Epochs 1 completed in 474.0756494998932
+VBP : Epochs 1 completed in 475.48502254486084
+VBN : Epochs 1 completed in 474.4629135131836
+VBD : Epochs 2 completed in 472.2086272239685
+WP$ : Epochs 2 completed in 473.35574436187744
+VBP : Epochs 2 completed in 474.0270564556122
+VBN : Epochs 2 completed in 473.95085310935974
+VBD : Epochs 3 completed in 472.2402548789978
+WP$ : Epochs 3 completed in 473.3504366874695
+VBP : Epochs 3 completed in 474.0664677619934
+VBN : Epochs 3 completed in 474.0089690685272
+VBD : Epochs 4 completed in 472.11089754104614
+WP$ : Epochs 4 completed in 473.33929324150085
+VBP : Epochs 4 completed in 474.080525636673
+VBN : Epochs 4 completed in 474.1595301628113
+VBD : Epochs 5 completed in 472.40537452697754
+WP$ : Epochs 5 completed in 473.52775955200195
+VBP : Epochs 5 completed in 474.26835799217224
+VBN : Epochs 5 completed in 474.23309206962585
+VBD : Epochs 6 completed in 472.2641689777374
+WP$ : Epochs 6 completed in 473.576548576355
+VBP : Epochs 6 completed in 474.1667342185974
+VBN : Epochs 6 completed in 474.2501666545868
+VBD : Epochs 7 completed in 471.76576137542725
+WP$ : Epochs 7 completed in 473.1403021812439
+VBP : Epochs 7 completed in 473.86390113830566
+VBN : Epochs 7 completed in 473.9952619075775
+VBD : Epochs 8 completed in 471.6514427661896
+WP$ : Epochs 8 completed in 473.17471718788147
+VBP : Epochs 8 completed in 474.27021384239197
+VBN : Epochs 8 completed in 473.9834108352661
+VBD : Epochs 9 completed in 471.3801989555359
+Training Perceptron for VBD complete
+===================================
+WP$ : Epochs 9 completed in 473.5015308856964
+Training Perceptron for WP$ complete
+===================================
+VBP : Epochs 9 completed in 474.3913264274597
+Training Perceptron for VBP complete
+===================================
+VBN : Epochs 9 completed in 474.39436078071594
+Training Perceptron for VBN complete
+===================================
+Training Completed 21/48
+Training Completed 22/48
+Training Completed 23/48
+Training Completed 24/48
+Saving model to file weights/weights.pickle
+===================================
+Training Perceptron for ,
+Training Perceptron for AFX
+Training Perceptron for EX
+Training Perceptron for PRP
+AFX : Epochs 0 completed in 472.4876334667206
+PRP : Epochs 0 completed in 473.37430596351624
+EX : Epochs 0 completed in 474.95342350006104
+, : Epochs 0 completed in 475.0902614593506
+EX : Epochs 1 completed in 475.80265498161316
+PRP : Epochs 1 completed in 478.03724575042725
+, : Epochs 1 completed in 477.98941946029663
+AFX : Epochs 1 completed in 482.9825930595398
+EX : Epochs 2 completed in 475.0882296562195
+PRP : Epochs 2 completed in 476.1760559082031
+, : Epochs 2 completed in 477.61358761787415
+AFX : Epochs 2 completed in 480.90168952941895
+EX : Epochs 3 completed in 477.16818404197693
+PRP : Epochs 3 completed in 477.7504198551178
+, : Epochs 3 completed in 478.4251797199249
+AFX : Epochs 3 completed in 482.8076913356781
+EX : Epochs 4 completed in 474.2024884223938
+PRP : Epochs 4 completed in 478.78430342674255
+, : Epochs 4 completed in 476.422239780426
+AFX : Epochs 4 completed in 482.71864914894104
+EX : Epochs 5 completed in 477.85240721702576
+PRP : Epochs 5 completed in 477.64546751976013
+, : Epochs 5 completed in 478.63961720466614
+AFX : Epochs 5 completed in 483.24241042137146
+EX : Epochs 6 completed in 476.11896991729736
+PRP : Epochs 6 completed in 477.7496883869171
+, : Epochs 6 completed in 476.7542426586151
+AFX : Epochs 6 completed in 484.14505338668823
+EX : Epochs 7 completed in 475.10866475105286
+PRP : Epochs 7 completed in 480.1605269908905
+, : Epochs 7 completed in 484.0822718143463
+AFX : Epochs 7 completed in 482.36274337768555
+EX : Epochs 8 completed in 473.33378744125366
+PRP : Epochs 8 completed in 481.53319025039673
+, : Epochs 8 completed in 481.09555983543396
+AFX : Epochs 8 completed in 482.3116846084595
+EX : Epochs 9 completed in 474.9825439453125
+Training Perceptron for EX complete
+===================================
+PRP : Epochs 9 completed in 477.13942217826843
+Training Perceptron for PRP complete
+===================================
+, : Epochs 9 completed in 478.09140825271606
+Training Perceptron for , complete
+===================================
+AFX : Epochs 9 completed in 481.9277720451355
+Training Perceptron for AFX complete
+===================================
+Training Completed 25/48
+Training Completed 26/48
+Training Completed 27/48
+Training Completed 28/48
+Saving model to file weights/weights.pickle
+===================================
+Training Perceptron for XX
+Training Perceptron for JJR
+Training Perceptron for $
+Training Perceptron for VB
+VB : Epochs 0 completed in 470.52601194381714
+XX : Epochs 0 completed in 474.20132064819336
+$ : Epochs 0 completed in 474.68173265457153
+JJR : Epochs 0 completed in 475.4290359020233
+VB : Epochs 1 completed in 470.1897292137146
+$ : Epochs 1 completed in 472.5309555530548
+JJR : Epochs 1 completed in 472.4887273311615
+XX : Epochs 1 completed in 474.7083239555359
+VB : Epochs 2 completed in 469.8787591457367
+$ : Epochs 2 completed in 471.8682942390442
+JJR : Epochs 2 completed in 472.151643037796
+XX : Epochs 2 completed in 473.3973150253296
+VB : Epochs 3 completed in 469.7613525390625
+$ : Epochs 3 completed in 471.81335949897766
+JJR : Epochs 3 completed in 472.29744696617126
+XX : Epochs 3 completed in 473.4970109462738
+VB : Epochs 4 completed in 470.23531222343445
+$ : Epochs 4 completed in 472.1869297027588
+JJR : Epochs 4 completed in 472.250789642334
+XX : Epochs 4 completed in 473.667822599411
+VB : Epochs 5 completed in 471.94368958473206
+$ : Epochs 5 completed in 472.15228629112244
+JJR : Epochs 5 completed in 472.5845911502838
+XX : Epochs 5 completed in 473.59105610847473
+VB : Epochs 6 completed in 472.1846704483032
+$ : Epochs 6 completed in 472.07885909080505
+JJR : Epochs 6 completed in 472.3411684036255
+XX : Epochs 6 completed in 473.43396496772766
+VB : Epochs 7 completed in 471.23444390296936
+$ : Epochs 7 completed in 471.75793981552124
+JJR : Epochs 7 completed in 472.2905156612396
+XX : Epochs 7 completed in 473.1032929420471
+VB : Epochs 8 completed in 471.5753028392792
+$ : Epochs 8 completed in 472.33934783935547
+JJR : Epochs 8 completed in 472.31075143814087
+XX : Epochs 8 completed in 473.68073058128357
+VB : Epochs 9 completed in 471.25115180015564
+Training Perceptron for VB complete
+===================================
+$ : Epochs 9 completed in 472.2553279399872
+Training Perceptron for $ complete
+===================================
+JJR : Epochs 9 completed in 472.48278164863586
+Training Perceptron for JJR complete
+===================================
+XX : Epochs 9 completed in 473.5968904495239
+Training Perceptron for XX complete
+===================================
+Training Completed 29/48
+Training Completed 30/48
+Training Completed 31/48
+Training Completed 32/48
+Saving model to file weights/weights.pickle
+===================================
+Training Perceptron for VBG
+Training Perceptron for ``
+Training Perceptron for RBR
+Training Perceptron for RB
+VBG : Epochs 0 completed in 474.97441482543945
+`` : Epochs 0 completed in 476.5203547477722
+RBR : Epochs 0 completed in 476.95463609695435
+RB : Epochs 0 completed in 479.7973175048828
+VBG : Epochs 1 completed in 472.45774030685425
+`` : Epochs 1 completed in 477.1280267238617
+RBR : Epochs 1 completed in 477.5235424041748
+RB : Epochs 1 completed in 477.59789633750916
+VBG : Epochs 2 completed in 474.5994381904602
+RBR : Epochs 2 completed in 476.4795138835907
+RB : Epochs 2 completed in 476.7435710430145
+`` : Epochs 2 completed in 483.35997319221497
+VBG : Epochs 3 completed in 471.4213709831238
+RBR : Epochs 3 completed in 475.92090797424316
+RB : Epochs 3 completed in 476.74805879592896
+`` : Epochs 3 completed in 476.49841713905334
+VBG : Epochs 4 completed in 471.0459055900574
+RBR : Epochs 4 completed in 475.17277479171753
+RB : Epochs 4 completed in 476.5070719718933
+`` : Epochs 4 completed in 476.0731599330902
+VBG : Epochs 5 completed in 471.2842946052551
+RBR : Epochs 5 completed in 475.51892495155334
+RB : Epochs 5 completed in 477.1297609806061
+`` : Epochs 5 completed in 477.4189131259918
+VBG : Epochs 6 completed in 471.201797246933
+RBR : Epochs 6 completed in 475.3607807159424
+RB : Epochs 6 completed in 476.73272943496704
+`` : Epochs 6 completed in 476.4309046268463
+VBG : Epochs 7 completed in 471.0054512023926
+RBR : Epochs 7 completed in 475.0844531059265
+RB : Epochs 7 completed in 476.3886823654175
+`` : Epochs 7 completed in 476.0377562046051
+VBG : Epochs 8 completed in 471.2681682109833
+RBR : Epochs 8 completed in 475.28481364250183
+RB : Epochs 8 completed in 476.58789896965027
+`` : Epochs 8 completed in 476.339378118515
+VBG : Epochs 9 completed in 471.429869890213
+Training Perceptron for VBG complete
+===================================
+RBR : Epochs 9 completed in 475.9703793525696
+Training Perceptron for RBR complete
+===================================
+RB : Epochs 9 completed in 476.8931279182434
+Training Perceptron for RB complete
+===================================
+`` : Epochs 9 completed in 477.41295289993286
+Training Perceptron for `` complete
+===================================
+Training Completed 33/48
+Training Completed 34/48
+Training Completed 35/48
+Training Completed 36/48
+Saving model to file weights/weights.pickle
+===================================
+Training Perceptron for MD
+Training Perceptron for FW
+Training Perceptron for -RRB-
+Training Perceptron for JJ
+MD : Epochs 0 completed in 475.1884744167328
+FW : Epochs 0 completed in 475.86532711982727
+JJ : Epochs 0 completed in 477.7698519229889
+-RRB- : Epochs 0 completed in 480.0848743915558
+FW : Epochs 1 completed in 474.29644751548767
+MD : Epochs 1 completed in 476.516738653183
+JJ : Epochs 1 completed in 478.1664502620697
+-RRB- : Epochs 1 completed in 479.01198530197144
+FW : Epochs 2 completed in 474.2868092060089
+MD : Epochs 2 completed in 477.2483265399933
+JJ : Epochs 2 completed in 477.155148267746
+-RRB- : Epochs 2 completed in 478.52493238449097
+FW : Epochs 3 completed in 474.73307061195374
+MD : Epochs 3 completed in 476.53309655189514
+JJ : Epochs 3 completed in 477.56052827835083
+-RRB- : Epochs 3 completed in 478.9879720211029
+FW : Epochs 4 completed in 474.60962677001953
+MD : Epochs 4 completed in 476.92298316955566
+JJ : Epochs 4 completed in 476.76877307891846
+-RRB- : Epochs 4 completed in 478.77585339546204
+FW : Epochs 5 completed in 474.4668424129486
+MD : Epochs 5 completed in 476.2979588508606
+JJ : Epochs 5 completed in 476.4685401916504
+-RRB- : Epochs 5 completed in 478.57298254966736
+FW : Epochs 6 completed in 485.01927495002747
+JJ : Epochs 6 completed in 476.6531012058258
+MD : Epochs 6 completed in 485.14698123931885
+-RRB- : Epochs 6 completed in 478.66840291023254
+JJ : Epochs 7 completed in 477.0556604862213
+FW : Epochs 7 completed in 487.16234040260315
+MD : Epochs 7 completed in 484.3541762828827
+-RRB- : Epochs 7 completed in 479.2885203361511
+JJ : Epochs 8 completed in 476.90457344055176
+FW : Epochs 8 completed in 486.77214646339417
+MD : Epochs 8 completed in 481.1389207839966
+-RRB- : Epochs 8 completed in 478.845760345459
+JJ : Epochs 9 completed in 477.2165906429291
+Training Perceptron for JJ complete
+===================================
+-RRB- : Epochs 9 completed in 478.7116799354553
+Training Perceptron for -RRB- complete
+===================================
+MD : Epochs 9 completed in 480.360559463501
+Training Perceptron for MD complete
+===================================
+FW : Epochs 9 completed in 486.536429643631
+Training Perceptron for FW complete
+===================================
+Training Completed 37/48
+Training Completed 38/48
+Training Completed 39/48
+Training Completed 40/48
+Saving model to file weights/weights.pickle
+===================================
+Training Perceptron for DT
+Training Perceptron for PRP$
+Training Perceptron for NN
+Training Perceptron for RP
+RP : Epochs 0 completed in 475.305091381073
+PRP$ : Epochs 0 completed in 477.18097043037415
+DT : Epochs 0 completed in 477.798645734787
+NN : Epochs 0 completed in 479.9460983276367
+RP : Epochs 1 completed in 476.81396746635437
+DT : Epochs 1 completed in 478.0582811832428
+NN : Epochs 1 completed in 476.55472326278687
+PRP$ : Epochs 1 completed in 483.8677523136139
+RP : Epochs 2 completed in 479.0031259059906
+NN : Epochs 2 completed in 475.36193227767944
+DT : Epochs 2 completed in 479.45023798942566
+PRP$ : Epochs 2 completed in 481.64364433288574
+RP : Epochs 3 completed in 475.88661074638367
+NN : Epochs 3 completed in 475.49845361709595
+DT : Epochs 3 completed in 476.3103606700897
+PRP$ : Epochs 3 completed in 482.52841997146606
+NN : Epochs 4 completed in 475.52570509910583
+RP : Epochs 4 completed in 478.2776429653168
+DT : Epochs 4 completed in 476.10142707824707
+PRP$ : Epochs 4 completed in 482.0187659263611
+NN : Epochs 5 completed in 475.5880000591278
+RP : Epochs 5 completed in 476.23154067993164
+DT : Epochs 5 completed in 481.1519663333893
+PRP$ : Epochs 5 completed in 481.5430064201355
+NN : Epochs 6 completed in 475.41957449913025
+RP : Epochs 6 completed in 479.8384819030762
+DT : Epochs 6 completed in 480.98428750038147
+PRP$ : Epochs 6 completed in 482.1999125480652
+NN : Epochs 7 completed in 475.26414489746094
+RP : Epochs 7 completed in 479.68217611312866
+DT : Epochs 7 completed in 476.577143907547
+PRP$ : Epochs 7 completed in 482.6913182735443
+NN : Epochs 8 completed in 475.5550580024719
+RP : Epochs 8 completed in 477.62568187713623
+DT : Epochs 8 completed in 476.28263092041016
+PRP$ : Epochs 8 completed in 481.25144839286804
+NN : Epochs 9 completed in 475.55870151519775
+Training Perceptron for NN complete
+===================================
+RP : Epochs 9 completed in 476.11200523376465
+Training Perceptron for RP complete
+===================================
+DT : Epochs 9 completed in 476.18226313591003
+Training Perceptron for DT complete
+===================================
+PRP$ : Epochs 9 completed in 481.1282482147217
+Training Perceptron for PRP$ complete
+===================================
+Training Completed 41/48
+Training Completed 42/48
+Training Completed 43/48
+Training Completed 44/48
+Saving model to file weights/weights.pickle
+===================================
+Training Perceptron for :
+Training Perceptron for NFP
+Training Perceptron for IN
+Training Perceptron for JJS
+: : Epochs 0 completed in 474.7825651168823
+NFP : Epochs 0 completed in 475.4285132884979
+IN : Epochs 0 completed in 476.0542879104614
+JJS : Epochs 0 completed in 476.78404474258423
+: : Epochs 1 completed in 472.75312638282776
+NFP : Epochs 1 completed in 474.3247938156128
+IN : Epochs 1 completed in 474.3901209831238
+JJS : Epochs 1 completed in 474.43285059928894
+: : Epochs 2 completed in 472.722571849823
+NFP : Epochs 2 completed in 473.7131943702698
+IN : Epochs 2 completed in 474.1905391216278
+JJS : Epochs 2 completed in 474.6697988510132
+: : Epochs 3 completed in 472.6681568622589
+NFP : Epochs 3 completed in 473.6903476715088
+IN : Epochs 3 completed in 474.13066148757935
+JJS : Epochs 3 completed in 474.54677081108093
+: : Epochs 4 completed in 472.740930557251
+NFP : Epochs 4 completed in 473.68337631225586
+IN : Epochs 4 completed in 474.1639347076416
+JJS : Epochs 4 completed in 474.50792026519775
+: : Epochs 5 completed in 472.87359404563904
+NFP : Epochs 5 completed in 473.8040244579315
+IN : Epochs 5 completed in 474.1998076438904
+JJS : Epochs 5 completed in 474.55571269989014
+: : Epochs 6 completed in 472.7450394630432
+NFP : Epochs 6 completed in 473.8883981704712
+IN : Epochs 6 completed in 474.08652424812317
+JJS : Epochs 6 completed in 474.6562702655792
+: : Epochs 7 completed in 473.4289553165436
+NFP : Epochs 7 completed in 474.23321890830994
+IN : Epochs 7 completed in 473.98975253105164
+JJS : Epochs 7 completed in 474.58268117904663
+: : Epochs 8 completed in 473.0716145038605
+NFP : Epochs 8 completed in 474.05539989471436
+IN : Epochs 8 completed in 474.1481120586395
+JJS : Epochs 8 completed in 474.84961009025574
+: : Epochs 9 completed in 473.0080072879791
+Training Perceptron for : complete
+===================================
+NFP : Epochs 9 completed in 473.948570728302
+Training Perceptron for NFP complete
+===================================
+IN : Epochs 9 completed in 474.2944452762604
+Training Perceptron for IN complete
+===================================
+JJS : Epochs 9 completed in 474.7522406578064
+Training Perceptron for JJS complete
+===================================
+Training Completed 45/48
+Training Completed 46/48
+Training Completed 47/48
+Training Completed 48/48
+Saving model to file weights/weights.pickle
+===================================
+Training Completed.
+===================================
+Saving model to file weights/weights.pickle
+===================================
+Macro Score: 
+{'precision': 0.7331322365168434, 'recall': 0.681210583093311, 'fscore': 0.7062183671421334}
+Micro Score: 
+{'precision': 0.7909685942472827, 'recall': 0.7909685942472827, 'fscore': 0.7909685942472827}
