@@ -4,6 +4,7 @@ from sklearn.manifold import TSNE
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from rnn import PosRNN
+from evaluation import Evaluation
 
 
 def plot_embeddings_by_class(words_by_class):
@@ -38,13 +39,25 @@ if __name__ == '__main__':
     # g = embeddings.Glove()
     # g.load()
     # closest = g.find_closest_words("king")
+    # plot_embeddings_by_class([nn_list, jj_list])
 
     d = data.Provider()
-    sentences, sentence_pos, classes = d.load_train_data()
+    # sentences, sentence_pos, classes = d.load_train_data()
 
     model = PosRNN()
-    model.train(sentences, sentence_pos, classes)
+    # model.train(sentences, sentence_pos, classes)
 
-    test_sentences, test_sentence_pos, _ = d.load_test_data()
-    model.evaluate(test_sentences, test_sentence_pos)
-    # plot_embeddings_by_class([nn_list, jj_list])
+    test_sentences, test_sentence_pos, classes = d.load_test_data()
+    # model.evaluate(test_sentences, test_sentence_pos)
+    predictions = model.predict(test_sentences)
+
+    ev = Evaluation()
+    ev.fit(original=test_sentence_pos, predicted=predictions, classes=classes)
+
+    print("Macro Score: ")
+    macro = ev.get_macro_score()
+    print(macro)
+
+    print("Micro Score: ")
+    micro = ev.get_micro_score()
+    print(micro)

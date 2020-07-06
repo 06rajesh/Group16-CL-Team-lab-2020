@@ -5,11 +5,11 @@ import numpy as np
 from tensorflow import keras
 from tensorflow.keras import layers
 from tensorflow.keras.preprocessing import sequence
-from tensorflow.keras import backend as K
+# from tensorflow.keras import backend as K
 
 import embeddings
 
-
+# https://medium.com/swlh/named-entity-recognition-ner-using-keras-bidirectional-lstm-28cd3f301f54
 class PosRNN:
     def __init__(self):
         self.words_to_index = dict()
@@ -18,7 +18,7 @@ class PosRNN:
         self.vocab_size = 0
         self.feature_length = 0
         self.embedding_matrix = None
-        self.model = None
+        self._model = None
 
     def save_props_to_file(self):
         """
@@ -37,7 +37,7 @@ class PosRNN:
             print("Loading Properties from file {}".format(filename))
             print("===================================")
             infile = open(filename, 'rb')
-            w2i, t2i, max_len, voc_size = pickle.load(infile)
+            w2i, t2i, max_len = pickle.load(infile)
             infile.close()
             self.words_to_index = w2i
             self.tags_to_index = t2i
@@ -56,7 +56,6 @@ class PosRNN:
 
         words = list(words)
         self.max_length = max_count
-        # self.vocab_size = len(words)
         self.create_embedded_matrix(words)
 
         self.words_to_index = {w: i + 2 for i, w in enumerate(words)}
@@ -112,6 +111,13 @@ class PosRNN:
         self.feature_length = embed.n_dimension
         self.vocab_size = vocab_size
 
+        filename = os.path.join("checkpoints", "embeddings.pickle")
+        print("Saving Embeddings Matrix to file {}".format(filename))
+        print("===================================")
+        outfile = open(filename, 'wb')
+        pickle.dump(self.embedding_matrix, outfile)
+        outfile.close()
+
     @staticmethod
     def to_categorical(sequences, categories):
         cat_sequences = []
@@ -123,19 +129,6 @@ class PosRNN:
             cat_sequences.append(cats)
         return np.array(cat_sequences)
 
-    @staticmethod
-    def ignore_class_accuracy(to_ignore=0):
-        def ignore_accuracy(y_true, y_pred):
-            y_true_class = K.argmax(y_true, axis=-1)
-            y_pred_class = K.argmax(y_pred, axis=-1)
-
-            ignore_mask = K.cast(K.not_equal(y_pred_class, to_ignore), 'int32')
-            matches = K.cast(K.equal(y_true_class, y_pred_class), 'int32') * ignore_mask
-            accuracy = K.sum(matches) / K.maximum(K.sum(ignore_mask), 1)
-            return accuracy
-
-        return ignore_accuracy
-
     def create_model(self):
         model = keras.Sequential()
         model.add(layers.InputLayer(input_shape=(self.max_length,)))
@@ -143,9 +136,8 @@ class PosRNN:
                                    input_length=self.max_length, trainable=False))
         model.add(layers.Bidirectional(layers.LSTM(256, return_sequences=True)))
         model.add(layers.TimeDistributed(layers.Dense(len(self.tags_to_index))))
-        model.add(layers.Activation('relu'))
-        model.compile(loss='categorical_crossentropy',
-                      optimizer='rmsprop', metrics=['accuracy', self.ignore_class_accuracy(0)])
+        model.add(layers.Activation('softmax'))
+        model.compile(loss='categorical_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
 
         model.summary()
         return model
@@ -161,21 +153,62 @@ class PosRNN:
         model.fit(train_x, cat_train_tags_y, batch_size=128, epochs=20, validation_split=0.2)
 
         # serialize weights to HDF5
-        filename = os.path.join("checkpoints", "model.h5")
+        filename = os.path.join("checkpoints", "weights.h5")
         model.save_weights(filepath=filename)
-        print("Saved model to disk")
+        print("Saved Weights to disk")
         print("===================================")
-        self.model = model
+
+        filename = os.path.join("checkpoints", "my_model")
+        model.save(filepath=filename)
+        print("Saved Model to disk")
+        print("===================================")
+
+        self._model = model
         return self
 
-    # def predict(self, sentences):
-    #     self.load_properties()
+    def get_tag_from_idx(self, id_to_convert):
+        tag = None
+        for key, idx in self.tags_to_index.items():
+            if idx == id_to_convert:
+                tag = key
+                break
+        return tag
+
+    def get_model(self):
+        if self._model is None:
+            self.load_properties()
+            loaded_model = keras.models.load_model('checkpoints/my_model')
+            return loaded_model
+        else:
+            return self._model
+
+    def predict(self, sentences):
+        model = self.get_model()
+        test_x = self.encode_sentences(sentences)
+        pred_values = model.predict(test_x)
+
+        predictions = list()
+        for i, sentence in enumerate(sentences):
+            sentence_pred = list()
+            for j, word in enumerate(sentence):
+                prediction = pred_values[i][j]
+                max_idx = np.argmax(prediction)
+                tag = self.get_tag_from_idx(max_idx)
+                sentence_pred.append(tag)
+            predictions.append(sentence_pred)
+
+        return predictions
 
     def evaluate(self, sentences, sentence_pos):
+        model = self.get_model()
+
+        # Check its architecture
+        model.summary()
+
         test_x = self.encode_sentences(sentences)
         test_y = self.encode_tags(sentence_pos)
 
-        scores = self.model.evaluate(test_x, self.to_categorical(test_y, len(self.tags_to_index)))
-        print("=============================================")  # acc: 99.09751977804825
-        print("Final Accuracy: " + str(scores[1] * 100))
+        # Evaluate the model
+        loss, acc = model.evaluate(test_x, self.to_categorical(test_y, len(self.tags_to_index)))
+        print("Restored model, accuracy: {:5.2f}%".format(100 * acc))
 

@@ -1,17 +1,34 @@
+from itertools import chain
+
 
 class Evaluation:
-    def __init__(self, classes, original, predicted):
-        self.classes = classes
-        self.original = original
-        self.predicted = predicted
+    def __init__(self):
+        self.classes = list()
+        self.original = list()
+        self.predicted = list()
         self.scores = {}
 
-    def calculate(self):
+    @staticmethod
+    def flatten(ini_list):
+        flatten_list = list(chain.from_iterable(ini_list))
+        return flatten_list
+
+    def fit(self, classes, original, predicted):
         """
         fit the evaluation class to its original and predicted value,
         compute scores for each class
         """
-        for tag in self.classes:
+        if isinstance(original[0], list):
+            self.original = self.flatten(original)
+        else:
+            self.original = original
+
+        if isinstance(predicted[0], list):
+            self.predicted = self.flatten(predicted)
+        else:
+            self.predicted = predicted
+
+        for tag in classes:
             if len(tag) > 0:
                 self.scores[tag] = self.calculate_class_score(tag)
 
