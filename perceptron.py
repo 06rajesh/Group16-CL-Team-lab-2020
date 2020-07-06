@@ -30,24 +30,21 @@ class Perceptron:
         :param y: list of single pos class 1 if true or 0 if false
         :return: weights, dict of features list
         """
-        dv = CustomDictVectorizer(save_to=self._features_dir)
-        features_len = dv.get_features_length()
-        w = np.zeros(features_len)
+
+        w = np.zeros(301)
         for e in range(0, self._epochs):
             start = time.time()
 
             for i in range(len(x)):
                 f_list = x[i]
-                indexes, values = dv.get_idx_values(f_list)
 
                 f = 0
-                for j in range(len(indexes)):
-                    if indexes[j] != -1:
-                        f += w[indexes[j]] * values[j]
+                for j in range(len(f_list)):
+                    f += w[j] * f_list[j]
                 y_pred = self.activation_function(f)
 
-                for j in range(len(indexes)):
-                    w[indexes[j]] = w[indexes[j]] + self._learning_rate * (y[i] - y_pred) * values[j]
+                for j in range(len(f_list)):
+                    w[j] = w[j] + self._learning_rate * (y[i] - y_pred) * f_list[j]
 
             completed = time.time() - start
             if self._name is None:

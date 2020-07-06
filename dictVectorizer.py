@@ -125,31 +125,16 @@ class CustomDictVectorizer:
         :param inputs: list, list of input feature dict, created by PosToken Class
         :return: list of feature vectors shape (number of inputs, number of features in list)
         """
-        feature_list = self.load_features()
-        print("Fitting inputs with {} features".format(len(feature_list)))
-        if feature_list is not None:
-            n_inputs = len(inputs)
-            n_features = len(feature_list)
-            transformed = np.zeros((n_inputs, n_features+1))    # adding extra field with the features for bias
-            for i in range(n_inputs):
-                features = inputs[i]
-                transformed[i][0] = 1   # adding the bias value
-                for j, key in enumerate(features):
-                    if type(features[key]) is str:
-                        feature_name = key + '=' + features[key]
-                    else:
-                        feature_name = key
 
-                    try:
-                        idx = feature_list.index(feature_name) + 1  # shifting for bias value
-                    except ValueError:
-                        idx = -1
+        n_inputs = len(inputs)
+        n_features = 300
+        transformed = np.zeros((n_inputs, n_features+1))    # adding extra field with the features for bias
+        for i in range(n_inputs):
+            features = inputs[i]
+            transformed[i][0] = 1   # adding the bias value
+            for j in range(len(features)):
+                transformed[i][j] = features[j]
 
-                    if idx != -1:
-                        if type(features[key]) is int or type(features[key]) is float:
-                            transformed[i][idx] = features[key]
-                        else:
-                            transformed[i][idx] += 1.
 
             return transformed
         else:

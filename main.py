@@ -3,11 +3,12 @@ from evaluation import Evaluation
 from posToken import PosToken
 from multiClassPerceptron import MultiClassItem, MultiClassPerceptron
 from dictVectorizer import CustomDictVectorizer
+import numpy as np
 
 savePath = "weights"
 
 
-def prepare_multi_class_item(sentences, sentence_pos, classes):
+def prepare_multi_class_item(sentences, sentence_pos, classes, word_embeddings):
     """
     Prepare Items for MultiClassPerceptron Using MultiClassItem
     :param sentences: List of Sentences, which each is a list of tokens
@@ -22,8 +23,10 @@ def prepare_multi_class_item(sentences, sentence_pos, classes):
     t = PosToken()
     for i in range(len(sentences)):
         for j in range(len(sentences[i])):
-            features = t.get_features(sentences[i], j)
-            X.append(features)
+            if sentences[i][j] in word_embeddings.keys():
+                X.append(word_embeddings[sentences[i][j]])
+            else:
+                X.append(np.zeros(301))
             for k, v in inputs.items():
                 item = inputs.get(k)
                 if sentence_pos[i][j] == k:
@@ -31,19 +34,13 @@ def prepare_multi_class_item(sentences, sentence_pos, classes):
                 else:
                     item.Y.append(0.)
 
-    # Uncomment the following lines if you want to recreate the features from training data
-    # Features list is already created in weights directory
-    # ==================================
-    # dv = CustomDictVectorizer(save_to=savePath)
-    # dv.fit(X, min_occurs=400)
     for k, v in inputs.items():
         item = inputs.get(k)
         item.X = X
 
     return inputs
 
-
-def prepare_testing_data(s, s_p):
+def prepare_testing_data(s, s_p, word_embeddings):
     """
     Preapre testing data for evaluation
     :param s: List of Sentences, which each is a list of tokens
@@ -52,11 +49,12 @@ def prepare_testing_data(s, s_p):
     """
     x = list()
     y = list()
-    t = PosToken()
     for i in range(len(s)):
         for j in range(len(s[i])):
-            features = t.get_features(s[i], j)
-            x.append(features)
+            if s[i][j] in word_embeddings.keys():
+                x.append(word_embeddings[s[i][j]])
+            else:
+                x.append(np.zeros(301))
             y.append(s_p[i][j])
 
     dv = CustomDictVectorizer(save_to=savePath)
@@ -70,15 +68,15 @@ if __name__ == '__main__':
     sentences, sentence_pos, classes = dt.load_train_data()
     sentences_test, sentence_pos_test, _ = dt.load_test_data()
     word_embeddings, dimension = dt.load_glove_data();
-    items = prepare_multi_class_item(sentences, sentence_pos, classes)
-    x_test, y_test = prepare_testing_data(sentences_test, sentence_pos_test)
+    items = prepare_multi_class_item(sentences, sentence_pos, classes, word_embeddings)
+    x_test, y_test = prepare_testing_data(sentences_test, sentence_pos_test, word_embeddings)
 
     mlp = MultiClassPerceptron(save_to=savePath, n_process=2)
 
     # Uncomment the following line If you want to train again
     # Trained weights are already saved on weights directory
     # =====================================
-    # mlp.train(items)
+    mlp.train(items)
 
     y_pred = mlp.predict(inputs=x_test)
 

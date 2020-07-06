@@ -112,18 +112,20 @@ class DataProvider:
         :return: list of Sentences, List of POS list for each sentences and total Classes/Tags
         """
 
-        with open(self.path + "/glove.42B.300d.txt", 'r', encoding="utf-8") as text_file:
+        with open(self.path + "/glove.6B.300d.txt", 'r', encoding="utf-8") as text_file:
             for line in text_file:
                 values = line.split()
                 word = values[0]
                 weights = np.asarray(values[1:], "float32")
-                self.word_embeddings[word] = weights
+                output = [1]
+                output.extend(weights)
+                self.word_embeddings[word] = output
 
         w = next(iter(self.word_embeddings))
         self.dimension = len(self.word_embeddings[w])
         #calculate_average_vec()
         print("glove Data Loaded")
         print("Total words: {}".format(len(self.word_embeddings)))
-        print("Total dimension: {}", self.dimension)
+        print("Total dimension: {}".format(self.dimension))
         print("==============================")
         return self.word_embeddings, self.dimension
