@@ -1,4 +1,4 @@
-from data import provider
+from data import dataProvider
 from evaluation import Evaluation
 from posToken import PosToken
 from multiClassPerceptron import MultiClassItem, MultiClassPerceptron
@@ -61,11 +61,12 @@ def prepare_testing_data(s, s_p):
 
     dv = CustomDictVectorizer(save_to=savePath)
     x_transformed = dv.transform(x)
+    print(len(x_transformed[0]))
     return x_transformed, y
 
 
 if __name__ == '__main__':
-    dt = provider.DataProvider(path='data')
+    dt = dataProvider.DataProvider(path='data')
 
     sentences, sentence_pos, classes = dt.load_train_data()
     sentences_test, sentence_pos_test, _ = dt.load_test_data()

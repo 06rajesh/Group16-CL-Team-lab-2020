@@ -126,6 +126,16 @@ class Evaluation:
             'fscore': fscore
         }
 
+    def get_accuracy(self):
+        assert len(self.original) == len(self.predicted)
+        total_samples = len(self.original)
+        total_accurate = 0
+        for i in range(total_samples):
+            if self.original[i] == self.predicted[i]:
+                total_accurate += 1
+
+        return total_accurate/total_samples
+
     @staticmethod
     def get_f_score(precision, recall):
         if precision + recall == 0:

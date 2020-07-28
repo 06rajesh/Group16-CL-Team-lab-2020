@@ -7,23 +7,26 @@ class Provider:
     def __init__(self):
         self.path = path.dirname(path.abspath(__file__))
 
-    def load_original_data(self):
-        data = list()
+    def load_develop_data(self):
+        # data = list()
         line_count = 0
 
         with open(self.path + '/dev.col') as csv_file:
+            # csv_reader = csv.reader(csv_file, delimiter='\t')
+            # for row in csv_reader:
+            #     if len(row) != 0:
+            #         data.append(row[1])
+            #     else:
+            #         data.append('STT')
+            #     line_count += 1
             csv_reader = csv.reader(csv_file, delimiter='\t')
-            for row in csv_reader:
-                if len(row) != 0:
-                    data.append(row[1])
-                else:
-                    data.append('STT')
-                line_count += 1
+            sentences, sentences_pos, classes = self.construct_sentences(csv_reader)
 
-        print("Total {} original data loaded".format(line_count))
+        print("Develop data loaded")
+        print("Total Classes: {}".format(len(classes)))
+        print("Total Sentences: {}".format(len(sentences)))
         print("==============================")
-        classes = set(data)
-        return data, classes
+        return sentences, sentences_pos, classes
 
     def load_predicted_data(self):
         data = list()
@@ -57,12 +60,14 @@ class Provider:
         sent_pos_tmp = []
         all_pos = []
 
+        total_tokens = 0
         for line in lines:
             if len(line) > 0:
                 pos = line[1]
                 sent_tmp.append(line[0])
                 sent_pos_tmp.append(pos)
                 all_pos.append(pos)
+                total_tokens += 1
             else:
                 sentences.append(sent_tmp)
                 sentences_pos.append(sent_pos_tmp)
@@ -70,6 +75,7 @@ class Provider:
                 sent_pos_tmp = []
         classes = set(all_pos)
 
+        print("Total Tokens: {}".format(total_tokens))
         return sentences, sentences_pos, classes
 
     def load_train_data(self):

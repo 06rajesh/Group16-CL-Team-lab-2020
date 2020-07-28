@@ -1,28 +1,34 @@
 import numpy as np
 import os.path as path
+import io
 from scipy import spatial
 
 
-class Glove:
+class FastText:
     def __init__(self):
         self.embeddings_dict = {}
         self.n_dimension = 0
+        self.n_tokens = 0
         self.average = None
 
     def load(self):
-        with open(path.dirname(path.abspath(__file__)) + "pretrained/glove.6B.300d.txt", 'r', encoding="utf-8") as f:
-            for line in f:
-                values = line.split()
-                word = values[0]
-                vector = np.asarray(values[1:], "float32")
-                self.embeddings_dict[word] = vector
+        fname = path.join(path.dirname(path.abspath(__file__)), 'pretrained/wiki-news-300d-1M.vec')
+        fin = io.open(fname, 'r', encoding='utf-8', newline='\n', errors='ignore')
+        n, d = map(int, fin.readline().split())
+        ft_dict = {}
+        for line in fin:
+            values = line.split()
+            token = values[0]
+            vector = np.asarray(values[1:], "float32")
+            ft_dict[token] = vector
 
-        first_key = next(iter(self.embeddings_dict))
-        self.n_dimension = len(self.embeddings_dict[first_key])
+        self.embeddings_dict = ft_dict
+        self.n_tokens = n
+        self.n_dimension = d
         self.calculate_average_vec()
 
     def calculate_average_vec(self):
-        n_vec = len(self.embeddings_dict)
+        n_vec = self.n_tokens
         vecs = np.zeros((n_vec, self.n_dimension), dtype=np.float32)
         for i, key in enumerate(self.embeddings_dict):
             vecs[i] = self.embeddings_dict[key]
@@ -37,7 +43,7 @@ class Glove:
 
     def get_embedding_val(self, term, average_on_none=False):
         try:
-            val = self.embeddings_dict[term.lower()]
+            val = self.embeddings_dict[term]
         except KeyError:
             if average_on_none:
                 val = self.average

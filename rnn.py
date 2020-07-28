@@ -1,5 +1,6 @@
 import os
 import pickle
+import re
 
 import numpy as np
 from tensorflow import keras
@@ -9,9 +10,10 @@ from tensorflow.keras.preprocessing import sequence
 
 import embeddings
 
+
 # https://medium.com/swlh/named-entity-recognition-ner-using-keras-bidirectional-lstm-28cd3f301f54
 class PosRNN:
-    def __init__(self):
+    def __init__(self, save_path="checkpoints", embedding_type="GLOVE"):
         self.words_to_index = dict()
         self.tags_to_index = dict()
         self.max_length = 0
@@ -19,29 +21,33 @@ class PosRNN:
         self.feature_length = 0
         self.embedding_matrix = None
         self._model = None
+        self._save_path = save_path
+        self._saved_model_name = "model_epochs_0"
+        self._embedding_type = embedding_type
 
-    def save_props_to_file(self):
+    def save_props_to_file(self, model_name="model_epochs_0"):
         """
         Save weight to _savePath directory in weights.pickle file
         """
-        filename = os.path.join("checkpoints", "props.pickle")
+        filename = os.path.join(self._save_path, "props.pickle")
         print("Saving Properties to file {}".format(filename))
         print("===================================")
         outfile = open(filename, 'wb')
-        pickle.dump([self.words_to_index, self.tags_to_index, self.max_length], outfile)
+        pickle.dump([self.words_to_index, self.tags_to_index, self.max_length, model_name], outfile)
         outfile.close()
 
     def load_properties(self):
-        filename = os.path.join("checkpoints", "props.pickle")
+        filename = os.path.join(self._save_path, "props.pickle")
         if len(self.words_to_index) == 0 and os.path.isfile(filename):
             print("Loading Properties from file {}".format(filename))
             print("===================================")
             infile = open(filename, 'rb')
-            w2i, t2i, max_len = pickle.load(infile)
+            w2i, t2i, max_len, saved_model_name = pickle.load(infile)
             infile.close()
             self.words_to_index = w2i
             self.tags_to_index = t2i
             self.max_length = max_len
+            self._saved_model_name = saved_model_name
 
     def set_training_props(self, train_x, tagset):
         words, tags = set([]), set([])
@@ -49,7 +55,7 @@ class PosRNN:
         for s in train_x:
             word_count = 0
             for w in s:
-                words.add(w.lower())
+                words.add(w)
                 word_count += 1
             if word_count > max_count:
                 max_count = word_count
@@ -73,7 +79,7 @@ class PosRNN:
             s_int = []
             for w in s:
                 try:
-                    s_int.append(self.words_to_index[w.lower()])
+                    s_int.append(self.words_to_index[w])
                 except KeyError:
                     s_int.append(self.words_to_index['-OOV-'])
 
@@ -94,29 +100,55 @@ class PosRNN:
         encoded = sequence.pad_sequences(encoded, maxlen=self.max_length, padding='post')
         return encoded
 
+    @staticmethod
+    def get_word_features(word:str):
+        features = np.zeros(4)
+
+        # is upper
+        if word.upper() == word:
+            features[0] = 1
+
+        # is capitalized
+        if word[0].upper() == word[0] and features[0] == 0:
+            features[1] = 1
+
+        # is lower
+        if word.lower() == word:
+            features[2] = 1
+
+        # has number
+        if re.search('^[0-9]+', word):
+            features[2] = 1
+
+        return features
+
     def create_embedded_matrix(self, words):
-        embed = embeddings.Glove()
+        if self._embedding_type == "FASTTEXT" or self._embedding_type == "fasttext":
+            embed = embeddings.FastText()
+        else:
+            embed = embeddings.Glove()
         embed.load()
         vocab_size = len(embed.embeddings_dict)
-
-        e_matrix = np.zeros((vocab_size, embed.n_dimension))
+        feature_length = embed.n_dimension + 4    # additional features from word
+        e_matrix = np.zeros((vocab_size, feature_length))
         i = 0
         for word in words:
-            val = embed.get_embedding_val(word)
+            val = embed.get_embedding_val(word, average_on_none=True)
             if val is not None:
-                e_matrix[i] = embed.get_embedding_val(word)
+                features = np.concatenate((val, self.get_word_features(word)), axis=None)
+                e_matrix[i] = features
                 i += 1
 
         self.embedding_matrix = e_matrix
-        self.feature_length = embed.n_dimension
+        self.feature_length = feature_length
         self.vocab_size = vocab_size
 
-        filename = os.path.join("checkpoints", "embeddings.pickle")
-        print("Saving Embeddings Matrix to file {}".format(filename))
-        print("===================================")
-        outfile = open(filename, 'wb')
-        pickle.dump(self.embedding_matrix, outfile)
-        outfile.close()
+        # filename = os.path.join(self._save_path, "embeddings.pickle")
+        # print("Saving Embeddings Matrix to file {}".format(filename))
+        # print("===================================")
+        # outfile = open(filename, 'wb')
+        # pickle.dump(self.embedding_matrix, outfile)
+        # outfile.close()
 
     @staticmethod
     def to_categorical(sequences, categories):
@@ -142,7 +174,7 @@ class PosRNN:
         model.summary()
         return model
 
-    def train(self, sentences, sentence_pos, tagset):
+    def train(self, sentences, sentence_pos, tagset, num_of_epochs=30):
         self.set_training_props(sentences, tagset)
         train_x = self.encode_sentences(sentences)
         train_y = self.encode_tags(sentence_pos)
@@ -150,19 +182,20 @@ class PosRNN:
         cat_train_tags_y = self.to_categorical(train_y, len(self.tags_to_index))
 
         model = self.create_model()
-        model.fit(train_x, cat_train_tags_y, batch_size=128, epochs=20, validation_split=0.2)
+        model.fit(train_x, cat_train_tags_y, batch_size=128, epochs=num_of_epochs, validation_split=0.2)
 
         # serialize weights to HDF5
-        filename = os.path.join("checkpoints", "weights.h5")
-        model.save_weights(filepath=filename)
-        print("Saved Weights to disk")
-        print("===================================")
+        # filename = os.path.join(self._save_path, "weights.h5")
+        # model.save_weights(filepath=filename)
+        # print("Saved Weights to disk")
+        # print("===================================")
 
-        filename = os.path.join("checkpoints", "my_model")
+        filename = os.path.join(self._save_path, "model_epochs_" + str(num_of_epochs))
         model.save(filepath=filename)
-        print("Saved Model to disk")
+        print("Saved Model to disk at {}".format(filename))
         print("===================================")
 
+        self.save_props_to_file(model_name= "model_epochs_" + str(num_of_epochs))
         self._model = model
         return self
 
@@ -177,7 +210,9 @@ class PosRNN:
     def get_model(self):
         if self._model is None:
             self.load_properties()
-            loaded_model = keras.models.load_model('checkpoints/my_model')
+            model_path = os.path.join(self._save_path, self._saved_model_name)
+            # model_path = os.path.join(self._save_path, "model_epochs_10")
+            loaded_model = keras.models.load_model(model_path)
             return loaded_model
         else:
             return self._model
