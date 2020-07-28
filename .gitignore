@@ -1,2 +1,7 @@
 .idea/
 __pycache__
+checkpoints/
+embeddings/glove.6B.300d.txt
+rnn_fasttext_model
+rnn_glove_model
+embeddings/pretrained

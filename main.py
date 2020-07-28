@@ -1,89 +1,90 @@
-from dataProvider import DataProvider
+# Include standard modules
+import argparse
+
+import embeddings
+import data
+from sklearn.manifold import TSNE
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+from rnn import PosRNN
 from evaluation import Evaluation
-from posToken import PosToken
-from multiClassPerceptron import MultiClassItem, MultiClassPerceptron
-from dictVectorizer import CustomDictVectorizer
-
-savePath = "weights"
+import perceptron
+import embeddings
 
 
-def prepare_multi_class_item(sentences, sentence_pos, classes):
-    """
-    Prepare Items for MultiClassPerceptron Using MultiClassItem
-    :param sentences: List of Sentences, which each is a list of tokens
-    :param sentence_pos: List of Sentenece Pos, which each is list of POS tag
-    :param classes: list of classes in data
-    :return: list of MultiClassItem
-    """
-    inputs = dict()
-    for pos in classes:
-        inputs[pos] = MultiClassItem(pos)
-    X = list()
-    t = PosToken()
-    for i in range(len(sentences)):
-        for j in range(len(sentences[i])):
-            features = t.get_features(sentences[i], j)
-            X.append(features)
-            for k, v in inputs.items():
-                item = inputs.get(k)
-                if sentence_pos[i][j] == k:
-                    item.Y.append(1.)
-                else:
-                    item.Y.append(0.)
+def plot_embeddings_by_class(words_by_class):
+    joined = list()
+    labels = list()
 
-    # Uncomment the following lines if you want to recreate the features from training data
-    # Features list is already created in weights directory
-    # ==================================
-    # dv = CustomDictVectorizer(save_to=savePath)
-    # dv.fit(X, min_occurs=400)
-    for k, v in inputs.items():
-        item = inputs.get(k)
-        item.X = X
+    colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22',
+              '#17becf']
+    shapes = ["o", "v", "^", "<", ">", "1", "2", "3", "4", "8", "s", "p"]
 
-    return inputs
+    for i in range(len(words_by_class)):
+        single_class_words = list(words_by_class[i])
+        joined.extend(single_class_words)
+        labels.extend([i]*len(single_class_words))
+
+    vectors = [g.get_embedding_val(word) for word in joined]
+
+    tsne = TSNE(n_components=3, random_state=0)
+    Y = tsne.fit_transform(vectors)
+
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+
+    for i in range(len(Y)):
+        ax.scatter(Y[i][0], Y[i][1], Y[i][2], c=colors[labels[i]], marker=shapes[labels[i]])
+        ax.text(Y[i][0], Y[i][1], Y[i][2], '%s' % (joined[i]), size=5, zorder=1, color=colors[labels[i]])
+
+    plt.show()
 
 
-def prepare_testing_data(s, s_p):
-    """
-    Preapre testing data for evaluation
-    :param s: List of Sentences, which each is a list of tokens
-    :param s_p: List of Sentenece Pos, which each is list of POS tag
-    :return: list of inputs and list of expected class
-    """
-    x = list()
-    y = list()
-    t = PosToken()
-    for i in range(len(s)):
-        for j in range(len(s[i])):
-            features = t.get_features(s[i], j)
-            x.append(features)
-            y.append(s_p[i][j])
+def check_embedding_stats(type="GLOVE"):
+    d = data.Provider()
+    sentences, sentence_pos, classes = d.load_train_data()
 
-    dv = CustomDictVectorizer(save_to=savePath)
-    x_transformed = dv.transform(x)
-    return x_transformed, y
+    if type == "GLOVE":
+        embed = embeddings.Glove()
+    else:
+        embed = embeddings.FastText()
+    embed.load()
+
+    not_found_count = 0
+    not_found_words = list()
+    for sentence in sentences:
+        for word in sentence:
+            val = embed.get_embedding_val(word)
+            if val is None:
+                not_found_count += 1
+                not_found_words.append(word)
+
+    not_found_words = set(not_found_words)
+    print(len(not_found_words))
+    print("Total Not Found {}".format(not_found_count))
+    print("Total Terms in Embedding: {}".format(len(embed.embeddings_dict)))
 
 
-if __name__ == '__main__':
-    dt = DataProvider(path='data')
+def run_rnn_model(embeddings='GLOVE', train=False):
+    d = data.Provider()
 
-    sentences, sentence_pos, classes = dt.load_train_data()
-    sentences_test, sentence_pos_test, _ = dt.load_test_data()
+    if embeddings == 'FASTTEXT':
+        model = PosRNN(save_path="rnn_fasttext_model", embedding_type=embeddings)
+    else:
+        model = PosRNN(save_path="rnn_glove_model", embedding_type=embeddings)
 
-    items = prepare_multi_class_item(sentences, sentence_pos, classes)
-    x_test, y_test = prepare_testing_data(sentences_test, sentence_pos_test)
+    if train:
+        sentences, sentence_pos, classes = d.load_train_data()
+        print("Training Started using {} embeddings".format(embeddings))
+        print("===================================================")
+        model.train(sentences, sentence_pos, classes, num_of_epochs=15)
 
-    mlp = MultiClassPerceptron(save_to=savePath, n_process=2)
+    test_sentences, test_sentence_pos, classes = d.load_test_data()
+    model.evaluate(test_sentences, test_sentence_pos)
+    predictions = model.predict(test_sentences)
 
-    # Uncomment the following line If you want to train again
-    # Trained weights are already saved on weights directory
-    # =====================================
-    # mlp.train(items)
-
-    y_pred = mlp.predict(inputs=x_test)
-
-    ev = Evaluation(original=y_test, predicted=y_pred, classes=classes)
-    ev.calculate()
+    ev = Evaluation()
+    ev.fit(original=test_sentence_pos, predicted=predictions, classes=classes)
 
     print("Macro Score: ")
     macro = ev.get_macro_score()
@@ -93,11 +94,76 @@ if __name__ == '__main__':
     micro = ev.get_micro_score()
     print(micro)
 
-    """
-    OUTPUT
-    ================
-    Macro Score:
-    {'precision': 0.7331322365168434, 'recall': 0.681210583093311, 'fscore': 0.7062183671421334}
-    Micro Score:
-    {'precision': 0.7909685942472827, 'recall': 0.7909685942472827, 'fscore': 0.7909685942472827}
-    """
+    print("Accuracy: ")
+    accuracy = ev.get_accuracy()
+    print(accuracy)
+
+
+def run_perceptron_with_embeddings(train=False):
+    d = data.Provider()
+
+    mlp = perceptron.MultiClassPerceptron(n_process=4)
+
+    classes = None
+    if train:
+        sentences, sentence_pos, classes = d.load_train_data()
+        mlp.fit(sentences, sentence_pos, classes)
+        mlp.train()
+
+    sentences_test, sentence_pos_test, test_classes = d.load_test_data()
+    y_pred = mlp.predict(sentences=sentences_test)
+
+    if classes is None:
+        classes = test_classes
+
+    ev = Evaluation()
+    ev.fit(original=sentence_pos_test, predicted=y_pred, classes=classes)
+
+    print("Macro Score: ")
+    macro = ev.get_macro_score()
+    print(macro)
+
+    print("Micro Score: ")
+    micro = ev.get_micro_score()
+    print(micro)
+
+
+def str2bool(v):
+    if isinstance(v, bool):
+       return v
+    if v.lower() in ('yes', 'true', 't', 'y', '1'):
+        return True
+    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+        return False
+    else:
+        raise argparse.ArgumentTypeError('Boolean value expected.')
+
+
+if __name__ == '__main__':
+
+    # check_embedding_stats(type="GLOVE")
+    # check_embedding_stats(type="FASTTEXT")
+
+    # Define the program description
+    text = 'Program to run different models for parts-of-speech tagging'
+
+    # Initiate the parser with a description
+    parser = argparse.ArgumentParser(description=text)
+
+    # Add long and short argument
+    parser.add_argument("--model", "-m", help="Select model, perceptron/rnn", default='rnn')
+    parser.add_argument("--embeddings", "-e", help="Select embeddings for RNN, glove/fasttext", default='glove')
+    parser.add_argument("--train", "-t", type=str2bool, nargs='?',
+                        const=True, default=False,
+                        help="Activate Training mode.")
+
+    args = parser.parse_args()
+
+    if args.model.lower() == 'perceptron':
+        run_perceptron_with_embeddings(train=args.train)
+    else:
+        embed = "GLOVE"
+        if args.embeddings.lower() == 'fasttext':
+            embed = 'FASTTEXT'
+        run_rnn_model(embeddings=embed, train=args.train)
+
