@@ -4,12 +4,22 @@ from scipy import spatial
 
 
 class Glove:
+    """
+    Class to handle the glove Embeddings, load the pretrained
+    embeddings from the directory and return embedding
+    vector for words.
+    """
     def __init__(self):
         self.embeddings_dict = {}
         self.n_dimension = 0
         self.average = None
 
     def load(self):
+        """
+        Load the embedding vector from directory
+        and store the whole embedding as a dictionary
+        :return: none
+        """
         with open(path.dirname(path.abspath(__file__)) + "pretrained/glove.6B.300d.txt", 'r', encoding="utf-8") as f:
             for line in f:
                 values = line.split()
@@ -36,6 +46,13 @@ class Glove:
         return all_words[:limit]
 
     def get_embedding_val(self, term, average_on_none=False):
+        """
+        Get the vector of each term
+        :param term: a string, for which it will search the dictonary for embedding vector
+        :param average_on_none: Boolean, if true will return average vector if not found on Dictionary else
+        return None
+        :return: Vector or None
+        """
         try:
             val = self.embeddings_dict[term.lower()]
         except KeyError:

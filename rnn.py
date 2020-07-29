@@ -13,6 +13,9 @@ import embeddings
 
 # https://medium.com/swlh/named-entity-recognition-ner-using-keras-bidirectional-lstm-28cd3f301f54
 class PosRNN:
+    """
+    Class to run BLSTM-RNN model for part-of-speech tagging
+    """
     def __init__(self, save_path="checkpoints", embedding_type="GLOVE"):
         self.words_to_index = dict()
         self.tags_to_index = dict()
@@ -27,7 +30,7 @@ class PosRNN:
 
     def save_props_to_file(self, model_name="model_epochs_0"):
         """
-        Save weight to _savePath directory in weights.pickle file
+        Save models to _save_path directory in model_name file
         """
         filename = os.path.join(self._save_path, "props.pickle")
         print("Saving Properties to file {}".format(filename))
@@ -37,6 +40,10 @@ class PosRNN:
         outfile.close()
 
     def load_properties(self):
+        """
+        Load properties from the _save_path directory and load
+        model from the previously saved model name in properties.
+        """
         filename = os.path.join(self._save_path, "props.pickle")
         if len(self.words_to_index) == 0 and os.path.isfile(filename):
             print("Loading Properties from file {}".format(filename))
@@ -102,6 +109,11 @@ class PosRNN:
 
     @staticmethod
     def get_word_features(word:str):
+        """
+        Extract basic features from a simple word
+        :param word: string
+        :return: 4 dimensional vector of 0 and 1
+        """
         features = np.zeros(4)
 
         # is upper
@@ -168,6 +180,14 @@ class PosRNN:
         return model
 
     def train(self, sentences, sentence_pos, tagset, num_of_epochs=30):
+        """
+        Train the BLSTM-MODEL using provided data
+        :param sentences: list of sentences
+        :param sentence_pos: list of POS tags for the each words in provided sentences
+        :param tagset: list of all tags in dataset
+        :param num_of_epochs: number of epocs to train
+        :return: model itself
+        """
         self.set_training_props(sentences, tagset)
         train_x = self.encode_sentences(sentences)
         train_y = self.encode_tags(sentence_pos)
@@ -204,6 +224,11 @@ class PosRNN:
             return self._model
 
     def predict(self, sentences):
+        """
+        Get the prediction from the model
+        :param sentences: list of sentences, where is sentence is a list of words
+        :return: list of predictions
+        """
         model = self.get_model()
         test_x = self.encode_sentences(sentences)
         pred_values = model.predict(test_x)
@@ -221,6 +246,12 @@ class PosRNN:
         return predictions
 
     def evaluate(self, sentences, sentence_pos):
+        """
+        Evaluate the model using tensorflow model method
+        :param sentences: list of sentences, where is sentence is a list of words
+        :param sentence_pos: list of POS tags for the each words in provided sentences
+        :return:
+        """
         model = self.get_model()
 
         # Check its architecture

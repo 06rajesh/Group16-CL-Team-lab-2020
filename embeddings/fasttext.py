@@ -5,6 +5,11 @@ from scipy import spatial
 
 
 class FastText:
+    """
+    Class to handle the FastText Embeddings, load the pretrained
+    embeddings from the directory and return embedding
+    vector for words.
+    """
     def __init__(self):
         self.embeddings_dict = {}
         self.n_dimension = 0
@@ -12,6 +17,11 @@ class FastText:
         self.average = None
 
     def load(self):
+        """
+        Load the embedding vector from directory
+        and store the whole embedding as a dictionary
+        :return: none
+        """
         fname = path.join(path.dirname(path.abspath(__file__)), 'pretrained/wiki-news-300d-1M.vec')
         fin = io.open(fname, 'r', encoding='utf-8', newline='\n', errors='ignore')
         n, d = map(int, fin.readline().split())
@@ -42,6 +52,13 @@ class FastText:
         return all_words[:limit]
 
     def get_embedding_val(self, term, average_on_none=False):
+        """
+        Get the vector of each term
+        :param term: a string, for which it will search the dictonary for embedding vector
+        :param average_on_none: Boolean, if true will return average vector if not found on Dictionary else
+        return None
+        :return: Vector or None
+        """
         try:
             val = self.embeddings_dict[term]
         except KeyError:

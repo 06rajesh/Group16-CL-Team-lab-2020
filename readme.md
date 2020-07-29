@@ -1,4 +1,5 @@
-## Implementation of different Machine Learning models for Part-of-Speech tagging
+# Group 16 CL-Team-Lab Project
+## Part-of-speech tagging
 
 ### Prerequisites
 
@@ -57,7 +58,7 @@ For RNN with GloVe Embeddings run the following command:
 ```buildoutcfg
 python3 main.py --model=rnn --embeddings=GLOVE --train=false
 ```
-Change the train parameter to false if you want to train again.
+Change the train parameter to `true` if you want to train again.
 
 For RNN with FASTTEXT embeddings run the following command:
 ```buildoutcfg
