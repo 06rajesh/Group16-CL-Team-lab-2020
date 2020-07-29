@@ -143,13 +143,6 @@ class PosRNN:
         self.feature_length = feature_length
         self.vocab_size = vocab_size
 
-        # filename = os.path.join(self._save_path, "embeddings.pickle")
-        # print("Saving Embeddings Matrix to file {}".format(filename))
-        # print("===================================")
-        # outfile = open(filename, 'wb')
-        # pickle.dump(self.embedding_matrix, outfile)
-        # outfile.close()
-
     @staticmethod
     def to_categorical(sequences, categories):
         cat_sequences = []
@@ -184,12 +177,6 @@ class PosRNN:
         model = self.create_model()
         model.fit(train_x, cat_train_tags_y, batch_size=128, epochs=num_of_epochs, validation_split=0.2)
 
-        # serialize weights to HDF5
-        # filename = os.path.join(self._save_path, "weights.h5")
-        # model.save_weights(filepath=filename)
-        # print("Saved Weights to disk")
-        # print("===================================")
-
         filename = os.path.join(self._save_path, "model_epochs_" + str(num_of_epochs))
         model.save(filepath=filename)
         print("Saved Model to disk at {}".format(filename))
@@ -211,7 +198,6 @@ class PosRNN:
         if self._model is None:
             self.load_properties()
             model_path = os.path.join(self._save_path, self._saved_model_name)
-            # model_path = os.path.join(self._save_path, "model_epochs_10")
             loaded_model = keras.models.load_model(model_path)
             return loaded_model
         else:

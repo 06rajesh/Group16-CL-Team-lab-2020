@@ -1,15 +1,14 @@
-# Include standard modules
 import argparse
 
-import embeddings
-import data
 from sklearn.manifold import TSNE
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
+
 from rnn import PosRNN
 from evaluation import Evaluation
 import perceptron
 import embeddings
+import data
 
 
 def plot_embeddings_by_class(words_by_class):
